@@ -87,6 +87,30 @@ static Node * new_node(int num, Node * left, Node * right) {
 }
 
 
+static void free_node(Node * node) {
+
+    if (node != NULL) {
+        free_node(node->left, node);
+        free_node(node->right, node);
+
+        free(node);
+    }
+
+    return;
+}
+
+
+static void free_tree(Tree * tree) {
+
+    Node * root = *tree;
+    free_node(root);
+
+    *tree = NULL;
+
+    return;
+}
+
+
 /*
  * gen_sample()
  * 
@@ -137,6 +161,8 @@ int gen_sample(int sample_size, int min_int, int max_int, int * sample) {
             ++i;
         }
     }
+
+    free_tree(&tree);
 
     return ERR_SUCCESS;
 }
