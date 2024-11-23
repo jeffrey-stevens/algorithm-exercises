@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g -O0 -Wall -Wextra -dTESTING
+CFLAGS = -g -O0 -Wall -Wextra -DTESTING
 
 
 .PHONY: all build
@@ -9,7 +9,7 @@ all: build
 build: sample-test.exe
 
 sample-test.exe: sample.o test.o
-	$(CC) $(CFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) -o $@ $^
 
 sample.o: sample.c sample.h
 	$(CC) $(CFLAGS) -c -o $@ $<

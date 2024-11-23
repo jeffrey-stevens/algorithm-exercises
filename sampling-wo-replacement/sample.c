@@ -28,6 +28,20 @@ void fatal_error(char * message) {
 }
 
 
+STATIC Node * new_node(int num, Node * left, Node * right) {
+
+    Node * node = (Node *) malloc(sizeof(Node));
+    if (node == NULL) {
+        fatal_error("Unable to allocate memory for the binary tree.");
+    }
+
+    node->num = num;
+    node->left = left;
+    node->right = right;
+
+    return node;
+}
+
 // Returns true if the number was not in the tree.
 STATIC bool insert_num(Tree * tree, int num) {
     
@@ -69,26 +83,11 @@ STATIC bool insert_num(Tree * tree, int num) {
 }
 
 
-STATIC Node * new_node(int num, Node * left, Node * right) {
-
-    Node * node = (Node *) malloc(sizeof(Node));
-    if (node == NULL) {
-        fatal_error("Unable to allocate memory for the binary tree.");
-    }
-
-    node->num = num;
-    node->left = left;
-    node->right = right;
-
-    return node;
-}
-
-
 STATIC void free_node(Node * node) {
 
     if (node != NULL) {
-        free_node(node->left, node);
-        free_node(node->right, node);
+        free_node(node->left);
+        free_node(node->right);
 
         free(node);
     }
@@ -144,7 +143,6 @@ int gen_sample(int sample_size, int min_int, int max_int, int * sample) {
     int i = 0;
     int num;
     bool found;
-    Node * curr_node;
 
     while (i < sample_size) {
         // FIXME:  This isn't a true random sampling since "range" may not evenly

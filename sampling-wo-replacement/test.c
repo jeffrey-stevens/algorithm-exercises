@@ -1,6 +1,7 @@
 #include "sample.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <stdbool.h>
 
 #define SAMPLE_SIZE 10
@@ -9,6 +10,7 @@
 
 
 int main(int argc, char * argv[]) {
+
     int sampling[SAMPLE_SIZE];
     int result = gen_sample(SAMPLE_SIZE, MIN_NUM, MAX_NUM, sampling);
 
