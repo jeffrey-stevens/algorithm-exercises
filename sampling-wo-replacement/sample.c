@@ -9,6 +9,7 @@
 #include <assert.h>
 
 
+#define ERR_SUCCESS             0
 #define ERR_MIN_GT_MAX          1
 #define ERR_RANGE_TOO_LARGE     2
 
@@ -31,7 +32,7 @@ void fatal_error(char * message) {
 
 
 // Returns true if the number was not in the tree.
-bool insert_num(Tree * tree, int num) {
+static bool insert_num(Tree * tree, int num) {
     
     bool found = false;
 
@@ -71,7 +72,7 @@ bool insert_num(Tree * tree, int num) {
 }
 
 
-Node * new_node(int num, Node * left, Node * right) {
+static Node * new_node(int num, Node * left, Node * right) {
 
     Node * node = (Node *) malloc(sizeof(Node));
     if (node == NULL) {
@@ -121,13 +122,21 @@ int gen_sample(int sample_size, int min_int, int max_int, int * sample) {
 
     int i = 0;
     int num;
+    bool found;
     Node * curr_node;
+
     while (i < sample_size) {
-        // This isn't a true random sampling since "range" may not evenly
+        // FIXME:  This isn't a true random sampling since "range" may not evenly
         // divide RAND_MAX...
         num = min_int + rand() % range;
 
-        // TODO
+        found = insert_num(&tree, num);
+        if (!found) {
+            // Add num to the sample
+            sample[i] = num;
+            ++i;
+        }
     }
 
+    return ERR_SUCCESS;
 }
