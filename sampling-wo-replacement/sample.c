@@ -3,15 +3,12 @@
  * 
 */
 
+#include "sample.h"
+#include "testing.h"
+
 #include <stdlib.h>
 #include <stdbool.h>
 #include <limits.h>
-#include <assert.h>
-
-
-#define ERR_SUCCESS             0
-#define ERR_MIN_GT_MAX          1
-#define ERR_RANGE_TOO_LARGE     2
 
 
 typedef struct NumNode Node;
@@ -32,7 +29,7 @@ void fatal_error(char * message) {
 
 
 // Returns true if the number was not in the tree.
-static bool insert_num(Tree * tree, int num) {
+STATIC bool insert_num(Tree * tree, int num) {
     
     bool found = false;
 
@@ -72,7 +69,7 @@ static bool insert_num(Tree * tree, int num) {
 }
 
 
-static Node * new_node(int num, Node * left, Node * right) {
+STATIC Node * new_node(int num, Node * left, Node * right) {
 
     Node * node = (Node *) malloc(sizeof(Node));
     if (node == NULL) {
@@ -87,7 +84,7 @@ static Node * new_node(int num, Node * left, Node * right) {
 }
 
 
-static void free_node(Node * node) {
+STATIC void free_node(Node * node) {
 
     if (node != NULL) {
         free_node(node->left, node);
@@ -100,7 +97,7 @@ static void free_node(Node * node) {
 }
 
 
-static void free_tree(Tree * tree) {
+STATIC void free_tree(Tree * tree) {
 
     Node * root = *tree;
     free_node(root);
