@@ -176,7 +176,7 @@ bool test_sample_size_1() {
     int test_passed = false;
 
     printf("Testing that having a sample size equal to the number range "
-        "succeeds and generates all numbers in the range.\n");
+        "succeeds and generates all numbers in the range...\n");
 
     int * samples = samples_array(sample_size);
     int result = gen_sample(sample_size, min_int, max_int, samples);
