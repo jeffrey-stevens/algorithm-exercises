@@ -22,7 +22,7 @@ struct NumNode {
 typedef Node * Tree;
 
 
-void fatal_error(char * message) {
+static void fatal_error(char * message) {
     perror(message);
     exit(EXIT_FAILURE);
 }
@@ -138,23 +138,34 @@ int gen_sample(int sample_size, int min_int, int max_int, int * sample) {
 
     int range = max_int - min_int + 1;
 
+    if (range < sample_size) {
+        // Not possible to have distinct elements
+        return ERR_RANGE_TOO_SMALL;
+    }
+
     Tree tree = NULL;
 
     int i = 0;
     int num;
-    bool found;
 
     while (i < sample_size) {
         // FIXME:  This isn't a true random sampling since "range" may not evenly
         // divide RAND_MAX...
         num = min_int + rand() % range;
 
-        found = insert_num(&tree, num);
-        if (!found) {
-            // Add num to the sample
-            sample[i] = num;
-            ++i;
+        // The following keeps probing until there's no collision...
+        // This will work well if sample_size << range, but may be slow if
+        // sample_size ~ range.  In either case it's faster than calling rand()
+        // repeatedly.
+        bool found;
+        while (found = insert_num(&tree, num)) {
+            // Try the next number
+            num = min_int + (num + 1) % range;
         }
+
+        // Add num to the sample
+        sample[i] = num;
+        ++i;
     }
 
     free_tree(&tree);
