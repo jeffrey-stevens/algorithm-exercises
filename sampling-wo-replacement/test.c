@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <limits.h>
 
 #define SAMPLE_SIZE 10
 #define MIN_NUM 0
@@ -61,7 +62,7 @@ bool test_min_eq_max() {
             "generates only a single value...\n");
 
     if (result == ERR_SUCCESS) {
-        printf("Test passed: The function did not error.\n");
+        printf("Test passed: gen_sample() returned code ERR_SUCCESS.\n");
 
         // Check that the correct value was written
         if (samples[0] == min_int) {
@@ -102,7 +103,8 @@ bool test_min_gt_max() {
         test_passed = true;
 
     } else {
-        printf("Test failed: Returned error code %d.\n", result);
+        printf("Test failed: min_int = %d, max_int = %d failed with error code %d.\n",
+            min_int, max_int, result);
         test_passed = false;
     }
 
@@ -111,8 +113,32 @@ bool test_min_gt_max() {
 
 
 bool test_range() {
-    return true;
+
+    int min_int = -1;
+    int max_int = RAND_MAX;
+    int sample_size = 10;
+    int test_passed = false;
+
+    printf("Testing that max_int - min_int > RAND_MAX fails with error code ERR_RANGE_TOO_LARGE.\n");
+
+    int * samples = samples_array(sample_size);
+    int result = gen_sample(sample_size, min_int, max_int, samples);
+
+    if (result == ERR_RANGE_TOO_LARGE) {
+        printf("Test passed: ");
+        printf("min_int = %d, max_int = %d, RAND_MAX = %d fails with error code ERR_RANGE_TOO_LARGE.\n",
+            min_int, max_int, RAND_MAX);
+        test_passed = true;
+
+    } else {
+        printf("Test failed: ");
+        printf("gen_sample() gave return code %d.\n", result);
+        test_passed = false;
+    }
+
+    return test_passed;
 }
+
 
 bool test_sample_size() {
     return true;
@@ -154,6 +180,8 @@ int main(int argc, char * argv[]) {
     test_min_eq_max();
     printf("\n");
     test_min_gt_max();
+    printf("\n");
+    test_range();
 
     return EXIT_SUCCESS;
 }
