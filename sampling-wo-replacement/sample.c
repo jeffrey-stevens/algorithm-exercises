@@ -140,7 +140,7 @@ int gen_sample(int sample_size, int min_int, int max_int, int * sample) {
 
     if (range < sample_size) {
         // Not possible to have distinct elements
-        return ERR_RANGE_TOO_SMALL;
+        return ERR_SAMPLE_SIZE_TOO_LARGE;
     }
 
     Tree tree = NULL;
