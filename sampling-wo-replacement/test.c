@@ -47,6 +47,7 @@ void print_samples(int sample_size, int * samples) {
 
 
 bool test_min_eq_max() {
+
     int min_int = 10;
     int max_int = min_int;
     int sample_size = 1;
@@ -60,14 +61,14 @@ bool test_min_eq_max() {
             "generates only a single value...\n");
 
     if (result == ERR_SUCCESS) {
-        printf("The function did not error.\n");
+        printf("Test passed: The function did not error.\n");
 
         // Check that the correct value was written
         if (samples[0] == min_int) {
-            printf("A single value of min_int = max_int = %d was generated.\n", min_int);
+            printf("Test passed: A single value of min_int = max_int = %d was generated.\n", min_int);
             test_passed = true;
         } else {
-            printf("The generated value of %d is not equal to min_int/max_int value of %d:\n",
+            printf("Test failed: The generated value of %d is not equal to min_int/max_int value of %d:\n",
                 samples[0], min_int);
             print_samples(sample_size, samples);
             test_passed = false;
@@ -85,7 +86,27 @@ bool test_min_eq_max() {
 
 
 bool test_min_gt_max() {
-    return true;
+
+    int min_int = 10;
+    int max_int = min_int - 1;
+    int sample_size = 10;
+    int test_passed = false;
+
+    printf("Testing that min_int > max_int fails with error code ERR_MIN_GT_MAX.\n");
+
+    int * samples = samples_array(sample_size);
+    int result = gen_sample(sample_size, min_int, max_int, samples);
+
+    if (result == ERR_MIN_GT_MAX) {
+        printf("Test passed: ERR_MIN_GT_MAX was returned.\n");
+        test_passed = true;
+
+    } else {
+        printf("Test failed: Returned error code %d.\n", result);
+        test_passed = false;
+    }
+
+    return test_passed;
 }
 
 
@@ -131,6 +152,8 @@ int main(int argc, char * argv[]) {
     test_basic_usage();
     printf("\n");
     test_min_eq_max();
+    printf("\n");
+    test_min_gt_max();
 
     return EXIT_SUCCESS;
 }
