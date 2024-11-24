@@ -126,6 +126,14 @@ STATIC void free_tree(Tree * tree) {
 */
 int gen_sample(int sample_size, int min_int, int max_int, int * sample) {
 
+    if (sample == NULL) {
+        return ERR_NULL_ARRAY_POINTER;
+    }
+
+    if (sample_size < 0) {
+        return ERR_NEG_SAMPLE_SIZE;
+    }
+
     if (min_int > max_int) {
         return ERR_MIN_GT_MAX;
     }
