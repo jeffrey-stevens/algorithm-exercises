@@ -1,7 +1,12 @@
-*.o
-*.d
-*.exe
-*.a
-*.so
-*.dll
+# Project files
 .vscode
+
+# Build files
+**/*.o
+**/*.d
+**/*.exe
+**/*.a
+**/*.so
+**/*.dll
+**/build/*
+**/bin/*
