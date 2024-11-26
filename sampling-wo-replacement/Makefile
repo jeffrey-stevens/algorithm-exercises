@@ -3,7 +3,7 @@ CFLAGS = -g -O0 -Wall -Wextra -DTESTING
 LDFLAGS =
 TEST_LDFLAGS = -lcriterion
 VALGRIND = valgrind
-VALGRIND_OPTS = --leak-check=yes
+VALGRIND_OPTS = --leak-check=yes --trace-children=yes
 
 BINDIR = bin/
 BUILDDIR = build/

@@ -7,6 +7,7 @@
 #include <limits.h>
 
 #include <criterion/criterion.h>
+#include <criterion/parameterized.h>
 
 #define SAMPLE_SIZE 10
 #define MIN_NUM 0
@@ -121,7 +122,7 @@ void sort_samples(int sample_size, int * samples) {
 // }
 
 
-Test(misc, failing) {
+Test(misc, failing, .description = "Forcing a failure...") {
     cr_assert(false, "Forced failure.");
 }
 
@@ -130,24 +131,89 @@ Test(misc, passing) {
 }
 
 
-Test(test_utilities, samples_string) {
+struct samples_string_params {
+    int test_samples[8];
+    int sample_size;
+    char expected_str[256];
+};
 
-    #define TEST_ARRAY {-100, 25, -939, 33, 896, -1252, 94837, -923458}
-    #define EXPECTED_STR "[-100, 25, -939, 33, 896, -1252, 94837, -923458]"
 
-    int samples[] = TEST_ARRAY;
-    int sample_size = sizeof(samples) / sizeof(samples[0]);
-    char * test_str = samples_string(sample_size, samples);
-    
-    cr_expect(strncmp(test_str, EXPECTED_STR, sample_size) == 0,
+ParameterizedTestParameters(samples_string, serialize) {
+
+    static struct samples_string_params params[] = {
+        // { 
+        //     .test_samples = {0},
+        //     .sample_size = 0,
+        //     .expected_str = "[]"
+        // },
+        {
+            .test_samples = {-100, 25, -939, 33, 896, -1252, 94837, -923458},
+            .sample_size = 8,
+            .expected_str = "[-100, 25, -939, 33, 896, -1252, 94837, -923458]"
+        }
+    };
+
+    int params_size = sizeof(params) / sizeof(struct samples_string_params);
+
+    return cr_make_param_array(struct samples_string_params, params, params_size);
+};
+
+
+ParameterizedTest(struct samples_string_params * params, samples_string, serialize) {
+
+    char * test_str = samples_string(params->sample_size, params->test_samples);
+
+    cr_expect(strncmp(test_str, params->expected_str, params->sample_size) == 0,
         "Expected serialized array to match expected string:\n"
         "Test string: %s\n"
         "Expected string: %s\n",
-        test_str, EXPECTED_STR);
+        test_str, params->expected_str);
 
     free(test_str);
-    #undef SAMPLES
 }
+
+
+// Test(samples_string, serialize) {
+
+//     #define TEST_ARRAY {-100, 25, -939, 33, 896, -1252, 94837, -923458}
+//     #define EXPECTED_STR "[-100, 25, -939, 33, 896, -1252, 94837, -923458]"
+
+//     int samples[] = TEST_ARRAY;
+//     int sample_size = sizeof(samples) / sizeof(samples[0]);
+//     char * test_str = samples_string(sample_size, samples);
+    
+//     cr_expect(strncmp(test_str, EXPECTED_STR, sample_size) == 0,
+//         "Expected serialized array to match expected string:\n"
+//         "Test string: %s\n"
+//         "Expected string: %s\n",
+//         test_str, EXPECTED_STR);
+
+//     free(test_str);
+//     #undef TEST_ARRAY
+//     #undef EXPECTED_STR
+// }
+
+
+// Test(samples_string, empty) {
+
+//     #define TEST_ARRAY {}
+//     #define EXPECTED_STR "[]"
+
+//     int samples[] = TEST_ARRAY;
+//     int sample_size = sizeof(samples) / sizeof(samples[0]);
+//     char * test_str = samples_string(sample_size, samples);
+    
+//     cr_expect(strncmp(test_str, EXPECTED_STR, sample_size) == 0,
+//         "Expected serialized array to match expected string:\n"
+//         "Test string: %s\n"
+//         "Expected string: %s\n",
+//         test_str, EXPECTED_STR);
+
+//     free(test_str);
+//     #undef TEST_ARRAY
+//     #undef EXPECTED_STR
+
+// }
 
 
 // Test(gen_sample, min_eq_max) {
