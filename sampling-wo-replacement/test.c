@@ -294,6 +294,7 @@ int main(int argc, char * argv[]) {
     test_sample_size_1();
     printf("\n");
     test_sample_size_2();
+    printf("\n");
 
     return EXIT_SUCCESS;
 }
