@@ -6,10 +6,11 @@ CFLAGS = -g -O0 -Wall -Wextra -DTESTING
 
 all: build
 
-build: sample-test.exe
+build: sample-test
 
-sample-test.exe: sample.o test.o
+sample-test: sample.o test.o
 	$(CC) $(CFLAGS) -o $@ $^
+	chmod 777 sample-test
 
 sample.o: sample.c sample.h
 	$(CC) $(CFLAGS) -c -o $@ $<
