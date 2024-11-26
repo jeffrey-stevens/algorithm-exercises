@@ -12,7 +12,7 @@ TARGET = $(BINDIR)sample-test
 TEST_TARGET = $(BINDIR)tests
 
 
-.PHONY: all build build-tests
+.PHONY: all build build-tests clean
 
 all: build build-tests
 
@@ -25,10 +25,6 @@ $(BINDIR):
 
 $(BUILDDIR):
 	mkdir -p $@
-
-# sample-test: sample.o test.o
-# 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
-# 	chmod 777 sample-test
 
 $(TARGET): $(BUILDDIR)sample.o $(BUILDDIR)test-criterion.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $(TEST_LDFLAGS) -o $@ $<
@@ -50,13 +46,13 @@ $(TEST_TARGET): $(BUILDDIR)test-criterion.o $(BUILDDIR)sample.o
 run: build
 	$(TARGET)
 
-run-tests: build-tests
+test: build-tests
 	$(TEST_TARGET)
 
-# check-memory: $(TARGET)
-# 	$(VALGRIND) $(VALGRIND_OPTS) ./$<
+check-memory: $(TARGET)
+	$(VALGRIND) $(VALGRIND_OPTS) ./$<
 
-check-memory: $(TEST_TARGET)
+check-test-memory: $(TEST_TARGET)
 	$(VALGRIND) $(VALGRIND_OPTS) ./$<
 
 clean:
