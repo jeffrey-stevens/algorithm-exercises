@@ -141,11 +141,11 @@ struct array_to_string_params {
 ParameterizedTestParameters(array_to_string, serialize) {
 
     static struct array_to_string_params params[] = {
-        // { 
-        //     .test_samples = {0},
-        //     .sample_size = 0,
-        //     .expected_str = "[]"
-        // },
+        { 
+            .test_samples = {0},
+            .sample_size = 0,
+            .expected_str = "[]"
+        },
         {
             .test_samples = {-100, 25, -939, 33, 896, -1252, 94837, -923458},
             .sample_size = 8,
