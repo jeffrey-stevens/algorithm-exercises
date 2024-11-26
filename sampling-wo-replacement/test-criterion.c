@@ -108,17 +108,17 @@ void sort_samples(int sample_size, int * samples) {
 }
 
 
-void test_sample_string(void) {
-    #define SAMPLES -100, 25, -939, 33, 896, -1252, 94837, -923458
-    int samples[] = {SAMPLES};
-    int sample_size = sizeof(samples) / sizeof(samples[0]);
+// void test_sample_string(void) {
+//     #define SAMPLES -100, 25, -939, 33, 896, -1252, 94837, -923458
+//     int samples[] = {SAMPLES};
+//     int sample_size = sizeof(samples) / sizeof(samples[0]);
 
-    char * str = samples_string(sample_size, samples);
+//     char * str = samples_string(sample_size, samples);
 
-    puts(str);
+//     puts(str);
 
-    free(str);
-}
+//     free(str);
+// }
 
 
 Test(misc, failing) {
@@ -130,17 +130,24 @@ Test(misc, passing) {
 }
 
 
-// Test(test_utilities, samples_string) {
-//     #define SAMPLES -100, 25, -939, 33, 896, -1252, 94837, -923458
-//     int samples[] = {SAMPLES};
-//     int sample_size = sizeof(samples) / sizeof(samples[0]);
+Test(test_utilities, samples_string) {
 
-//     char * str = samples_string(sample_size, samples);
+    #define TEST_ARRAY {-100, 25, -939, 33, 896, -1252, 94837, -923458}
+    #define EXPECTED_STR "[-100, 25, -939, 33, 896, -1252, 94837, -923458]"
 
-//     puts(str);
+    int samples[] = TEST_ARRAY;
+    int sample_size = sizeof(samples) / sizeof(samples[0]);
+    char * test_str = samples_string(sample_size, samples);
+    
+    cr_expect(strncmp(test_str, EXPECTED_STR, sample_size) == 0,
+        "Expected serialized array to match expected string:\n"
+        "Test string: %s\n"
+        "Expected string: %s\n",
+        test_str, EXPECTED_STR);
 
-//     free(str);
-// }
+    free(test_str);
+    #undef SAMPLES
+}
 
 
 // Test(gen_sample, min_eq_max) {
