@@ -51,7 +51,7 @@ void print_samples(int sample_size, int * samples) {
 }
 
 
-char * samples_string(int sample_size, int * samples) {
+char * array_to_string(int sample_size, int * samples) {
 
     // Get the maximum string width for integers
     char tmp_buffer[50];
@@ -114,7 +114,7 @@ void sort_samples(int sample_size, int * samples) {
 //     int samples[] = {SAMPLES};
 //     int sample_size = sizeof(samples) / sizeof(samples[0]);
 
-//     char * str = samples_string(sample_size, samples);
+//     char * str = array_to_string(sample_size, samples);
 
 //     puts(str);
 
@@ -131,16 +131,16 @@ Test(misc, passing) {
 }
 
 
-struct samples_string_params {
+struct array_to_string_params {
     int test_samples[8];
     int sample_size;
     char expected_str[256];
 };
 
 
-ParameterizedTestParameters(samples_string, serialize) {
+ParameterizedTestParameters(array_to_string, serialize) {
 
-    static struct samples_string_params params[] = {
+    static struct array_to_string_params params[] = {
         // { 
         //     .test_samples = {0},
         //     .sample_size = 0,
@@ -153,15 +153,15 @@ ParameterizedTestParameters(samples_string, serialize) {
         }
     };
 
-    int params_size = sizeof(params) / sizeof(struct samples_string_params);
+    int params_size = sizeof(params) / sizeof(struct array_to_string_params);
 
-    return cr_make_param_array(struct samples_string_params, params, params_size);
+    return cr_make_param_array(struct array_to_string_params, params, params_size);
 };
 
 
-ParameterizedTest(struct samples_string_params * params, samples_string, serialize) {
+ParameterizedTest(struct array_to_string_params * params, array_to_string, serialize) {
 
-    char * test_str = samples_string(params->sample_size, params->test_samples);
+    char * test_str = array_to_string(params->sample_size, params->test_samples);
 
     cr_expect(strncmp(test_str, params->expected_str, params->sample_size) == 0,
         "Expected serialized array to match expected string:\n"
@@ -173,14 +173,14 @@ ParameterizedTest(struct samples_string_params * params, samples_string, seriali
 }
 
 
-// Test(samples_string, serialize) {
+// Test(array_to_string, serialize) {
 
 //     #define TEST_ARRAY {-100, 25, -939, 33, 896, -1252, 94837, -923458}
 //     #define EXPECTED_STR "[-100, 25, -939, 33, 896, -1252, 94837, -923458]"
 
 //     int samples[] = TEST_ARRAY;
 //     int sample_size = sizeof(samples) / sizeof(samples[0]);
-//     char * test_str = samples_string(sample_size, samples);
+//     char * test_str = array_to_string(sample_size, samples);
     
 //     cr_expect(strncmp(test_str, EXPECTED_STR, sample_size) == 0,
 //         "Expected serialized array to match expected string:\n"
@@ -194,14 +194,14 @@ ParameterizedTest(struct samples_string_params * params, samples_string, seriali
 // }
 
 
-// Test(samples_string, empty) {
+// Test(array_to_string, empty) {
 
 //     #define TEST_ARRAY {}
 //     #define EXPECTED_STR "[]"
 
 //     int samples[] = TEST_ARRAY;
 //     int sample_size = sizeof(samples) / sizeof(samples[0]);
-//     char * test_str = samples_string(sample_size, samples);
+//     char * test_str = array_to_string(sample_size, samples);
     
 //     cr_expect(strncmp(test_str, EXPECTED_STR, sample_size) == 0,
 //         "Expected serialized array to match expected string:\n"
