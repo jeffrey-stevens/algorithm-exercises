@@ -121,6 +121,15 @@ void test_sample_string(void) {
 }
 
 
+Test(misc, failing) {
+    cr_assert(false, "Forced failure.");
+}
+
+Test(misc, passing) {
+    cr_assert(true, "Forced pass.");
+}
+
+
 // Test(test_utilities, samples_string) {
 //     #define SAMPLES -100, 25, -939, 33, 896, -1252, 94837, -923458
 //     int samples[] = {SAMPLES};
@@ -390,24 +399,24 @@ bool test_basic_usage() {
 }
 
 
-int main(int argc, char * argv[]) {
+// int main(int argc, char * argv[]) {
 
-    test_sample_string();
-    printf("\n");
+//     test_sample_string();
+//     printf("\n");
 
-    // TODO: Keep track of whether all tests passed or failed.
-    test_basic_usage();
-    printf("\n");
-    test_min_eq_max();
-    printf("\n");
-    test_min_gt_max();
-    printf("\n");
-    test_range();
-    printf("\n");
-    test_sample_size_1();
-    printf("\n");
-    test_sample_size_2();
-    printf("\n");
+//     // TODO: Keep track of whether all tests passed or failed.
+//     test_basic_usage();
+//     printf("\n");
+//     test_min_eq_max();
+//     printf("\n");
+//     test_min_gt_max();
+//     printf("\n");
+//     test_range();
+//     printf("\n");
+//     test_sample_size_1();
+//     printf("\n");
+//     test_sample_size_2();
+//     printf("\n");
 
-    return EXIT_SUCCESS;
-}
+//     return EXIT_SUCCESS;
+// }

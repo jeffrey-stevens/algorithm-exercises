@@ -9,13 +9,16 @@ BINDIR = bin/
 BUILDDIR = build/
 
 TARGET = $(BINDIR)sample-test
+TEST_TARGET = $(BINDIR)tests
 
 
-.PHONY: all build
+.PHONY: all build build-tests
 
-all: build
+all: build build-tests
 
 build: $(BUILDDIR) $(BINDIR) $(TARGET)
+
+build-tests: $(BUILDDIR) $(BINDIR) $(TEST_TARGET)
 
 $(BINDIR):
 	mkdir -p $@
@@ -40,10 +43,20 @@ $(BUILDDIR)test.o: test.c sample.h
 $(BUILDDIR)test-criterion.o: test-criterion.c sample.h
 	$(CC) $(CFLAGS) $(LDFLAGS) $(TEST_LDFLAGS) -c -o $@ $<
 
+$(TEST_TARGET): $(BUILDDIR)test-criterion.o $(BUILDDIR)sample.o 
+	$(CC) $(CFLAGS) $(LDFLAGS) $(TEST_LDFLAGS) -o $@ $^
+	 chmod 777 $@
+
 run: build
 	$(TARGET)
 
-check-memory: $(TARGET)
+run-tests: build-tests
+	$(TEST_TARGET)
+
+# check-memory: $(TARGET)
+# 	$(VALGRIND) $(VALGRIND_OPTS) ./$<
+
+check-memory: $(TEST_TARGET)
 	$(VALGRIND) $(VALGRIND_OPTS) ./$<
 
 clean:
