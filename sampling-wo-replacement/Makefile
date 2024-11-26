@@ -1,5 +1,7 @@
 CC = gcc
 CFLAGS = -g -O0 -Wall -Wextra -DTESTING
+VALGRIND = valgrind
+VALGRIND_OPTS = --leak-check=yes
 
 
 .PHONY: all build
@@ -18,5 +20,11 @@ sample.o: sample.c sample.h
 test.o: test.c sample.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
+run: sample-test
+	./sample-test
+
+check-memory: sample-test
+	$(VALGRIND) $(VALGRIND_OPTS) ./$<
+
 clean:
-	rm ./*.o ./*.exe
+	rm -f ./*.o ./*.exe

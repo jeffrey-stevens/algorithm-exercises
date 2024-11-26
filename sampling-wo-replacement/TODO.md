@@ -5,6 +5,7 @@
 ## Enhancements
 
 * Make the distribution of random numbers truely uniform.
+* Integrate Criterion unit testing
 
 ## Features
 
