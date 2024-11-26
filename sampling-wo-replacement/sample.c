@@ -7,6 +7,7 @@
 #include "testing.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <stdbool.h>
 #include <limits.h>
 
@@ -166,7 +167,7 @@ int gen_sample(int sample_size, int min_int, int max_int, int * sample) {
         // sample_size ~ range.  In either case it's faster than calling rand()
         // repeatedly.
         bool found;
-        while (found = insert_num(&tree, num)) {
+        while ( (found = insert_num(&tree, num)) ) {
             // Try the next number
             num = min_int + (num + 1) % range;
         }
