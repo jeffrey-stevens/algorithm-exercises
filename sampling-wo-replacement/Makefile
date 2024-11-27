@@ -1,77 +1,103 @@
+# Utilities
 CC = gcc
 GDB = gdb
 DEBUGGER = $(GDB)
-
-CFLAGS = -g -O0 -Wall -Wextra -DTESTING
-LDFLAGS =
-TEST_LDFLAGS = -lcriterion
-
-TEST_ARGS = --verbose=1 --full-stats
-
-ifeq ($(DEBUG), 0)
-CFLAGS += -DNDEBUG
-endif
-
-ifeq ($(DEBUG), 1)
-CFLAGS += -DDEBUG
-TEST_ARGS += --debug=$(DEBUGGER)
-endif
-
 VALGRIND = valgrind
+
+
+# Directories
+BIN_DIR = bin/
+BUILD_DIR = build/
+INCLUDE_DIR = include/
+SRC_DIR = src/
+TESTS_DIR = tests/
+TESTS_BIN_DIR = $(TESTS_DIR)/bin/
+TESTS_BUILD_DIR = $(TESTS_DIR)/build/
+TESTS_SRC_DIR = $(TESTS_DIR)/src/
+
+
+# Flags and options
+LDFLAGS =
+INCLUDE_FLAGS = -I$(INCLUDE_DIR)
+WARN_FLAGS = -Wall -Wextra
+DEBUG_FLAGS = -g -O0
+
+STATE_FLAGS = -DTESTING
+ifeq ($(DEBUG), 0)
+STATE_FLAGS += -DNDEBUG
+endif
+ifeq ($(DEBUG), 1)
+STATE_FLAGS += -DDEBUG
+endif
+
+CFLAGS = $(DEBUG_FLAGS) $(WARN_FLAGS) $(STATE_FLAGS) $(INCLUDE_FLAGS) $(LDFLAGS)
+
+TESTS_LDFLAGS = -lcriterion
+
+TESTS_OPTS = --verbose=1 --full-stats
+ifeq ($(DEBUG), 1)
+TESTS_OPTS += --debug=$(DEBUGGER)
+endif
+
 VALGRIND_OPTS = --leak-check=yes --trace-children=yes
 
-BINDIR = bin/
-BUILDDIR = build/
 
-TARGET = $(BINDIR)sample-test
-TEST_TARGET = $(BINDIR)tests
+# Targets
+TARGET = $(BIN_DIR)sample-test
+TESTS_TARGET = $(TESTS_BIN_DIR)tests
 
 
 .PHONY: all build build-tests clean
 
 all: build build-tests
 
-build: $(BUILDDIR) $(BINDIR) $(TARGET)
+build: $(BUILD_DIR) $(BIN_DIR) $(TARGET)
 
-build-tests: $(BUILDDIR) $(BINDIR) $(TEST_TARGET)
+build-tests: $(TESTS_DIR) $(TESTS_BUILD_DIR) $(TESTS_BIN_DIR) $(TESTS_TARGET)
 
-$(BINDIR):
+$(BIN_DIR):
 	mkdir -p $@
 
-$(BUILDDIR):
+$(BUILD_DIR):
 	mkdir -p $@
 
-$(TARGET): $(BUILDDIR)sample.o $(BUILDDIR)test-criterion.o
-	$(CC) $(CFLAGS) $(LDFLAGS) $(TEST_LDFLAGS) -o $@ $<
+$(TESTS_BUILD_DIR):
+	mkdir -p $@
+
+$(TESTS_BIN_DIR):
+	mkdir -p $@
+
+$(TARGET): $(BUILD_DIR)sample.o $(BUILD_DIR)test-criterion.o
+	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -o $@ $<
 	 chmod 777 $@
 
-$(BUILDDIR)sample.o: sample.c sample.h
+$(BUILD_DIR)sample.o: $(SRC_DIR)sample.c $(INCLUDE_DIR)sample.h
 	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
 
-$(BUILDDIR)test.o: test.c sample.h
+$(BUILD_DIR)test.o: $(TEST_SRC_DIR)test.c $(INCLUDE_DIR)sample.h
 	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
 
-$(BUILDDIR)test-criterion.o: test-criterion.c sample.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(TEST_LDFLAGS) -c -o $@ $<
+$(TESTS_BUILD_DIR)test-criterion.o: $(TESTS_SRC_DIR)test-criterion.c $(INCLUDE_DIR)sample.h
+	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
 
-$(TEST_TARGET): $(BUILDDIR)test-criterion.o $(BUILDDIR)sample.o 
-	$(CC) $(CFLAGS) $(LDFLAGS) $(TEST_LDFLAGS) -o $@ $^
+$(TESTS_TARGET): $(TESTS_BUILD_DIR)test-criterion.o $(BUILD_DIR)sample.o 
+	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -o $@ $^
 	 chmod 777 $@
 
 run: build
 	$(TARGET)
 
 test: build-tests
-	$(TEST_TARGET) $(TEST_ARGS)
+	$(TESTS_TARGET) $(TESTS_OPTS)
 
 debug: build_tests
-	$(GDB) -q $(TEST_TARGET)
+	$(GDB) -q $(TESTS_TARGET)
 
 check-memory: $(TARGET)
 	$(VALGRIND) $(VALGRIND_OPTS) ./$<
 
-check-test-memory: $(TEST_TARGET)
+check-tests-memory: $(TESTS_TARGET)
 	$(VALGRIND) $(VALGRIND_OPTS) ./$<
 
 clean:
-	rm -f ./*.o ./*.exe $(BINDIR)* $(BUILDDIR)*
+	rm -f ./*.o ./*.exe $(BIN_DIR)* $(BUILD_DIR)* $(TESTS_BIN_DIR)* $(TESTS_BUILD_DIR)*
