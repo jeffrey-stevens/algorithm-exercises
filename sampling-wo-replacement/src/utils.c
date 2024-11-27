@@ -1,10 +1,10 @@
-#include "sample.h"
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
 #include <limits.h>
+
+#include "utils.h"
 
 
 void fatal_error(char * message) {
