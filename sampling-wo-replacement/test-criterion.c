@@ -58,30 +58,36 @@ char * array_to_string(int sample_size, int * samples) {
     int max_int_width = snprintf(tmp_buffer, sizeof(tmp_buffer) / sizeof(tmp_buffer[0]),
         "%d", INT_MIN);
     
-    int buffer_size = 
-        1  // "["
-        + (max_int_width + 2) * (sample_size - 1)  // "N, " for the first sample_size - 1 integers
-        + max_int_width  // "N" for the last integer
-        + 1  // "]"
-        + 1  // "\0"
-        ;
+    // Calculate the maximum buffer size
+    int fixed_chars = 3;  // '[', ']', and '\0'
+    int total_digits = max_int_width * sample_size;  // The maximum width of all digits
+    int total_seps = (sample_size <= 0) ? 0 : 2 * (sample_size - 1);
+    int buffer_size = fixed_chars + total_digits + total_seps;
+
     char * buffer = (char *) malloc(buffer_size * sizeof(char));
 
     int idx = 0;
     buffer[idx] = '[';
-    idx = 1;
+    int chars_written = 1;
+    idx += chars_written;
     int remaining_size = buffer_size - idx;
-    int chars_written;
 
     for (int i = 0; i < sample_size; ++i) {
+        // Add the integer to the buffer
+        chars_written = snprintf(buffer + idx, remaining_size, "%d", samples[i]);
+        idx += chars_written;
+        remaining_size = buffer_size - idx;
+
         if (i < sample_size - 1) {
-            chars_written = snprintf(buffer + idx, remaining_size, "%d, ", samples[i]);
+            // Add the separator
+            chars_written = snprintf(buffer + idx, remaining_size, ", ");
             idx += chars_written;
             remaining_size = buffer_size - idx;
-        } else {
-            snprintf(buffer + idx, remaining_size, "%d]", samples[i]);
         }
     }
+
+    buffer[idx] = ']';
+    buffer[idx + 1] = '\0';
 
     return buffer;
 }
@@ -163,11 +169,24 @@ ParameterizedTest(struct array_to_string_params * params, array_to_string, seria
 
     char * test_str = array_to_string(params->sample_size, params->test_samples);
 
-    cr_expect(strncmp(test_str, params->expected_str, params->sample_size) == 0,
-        "Expected serialized array to match expected string:\n"
-        "Test string: %s\n"
-        "Expected string: %s\n",
-        test_str, params->expected_str);
+    // There's a bug with the way Criterion handles format strings
+    // in the assertions...
+    int test_size = strlen(test_str);
+    int expected_size = strlen(params->expected_str);
+    // cr_assert(test_size == expected_size,
+    //     "Expected the length of the serialized test string to equal the length of"
+    //     "the expected string:\n"
+    //     "Test string: %s\n"
+    //     "Expected string: %s\n",
+    //     test_size, expected_size);
+    cr_assert(test_size == expected_size);
+
+    // cr_expect(strncmp(test_str, params->expected_str, expected_size) == 0,
+    //     "Expected serialized array to match expected string:\n"
+    //     "Test string: %s\n"
+    //     "Expected string: %s\n",
+    //     test_str, params->expected_str);
+    cr_expect(strncmp(test_str, params->expected_str, expected_size) == 0);
 
     free(test_str);
 }

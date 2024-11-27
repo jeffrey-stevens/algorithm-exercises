@@ -1,7 +1,22 @@
 CC = gcc
+GDB = gdb
+DEBUGGER = $(GDB)
+
 CFLAGS = -g -O0 -Wall -Wextra -DTESTING
 LDFLAGS =
 TEST_LDFLAGS = -lcriterion
+
+TEST_ARGS = --verbose=1 --full-stats
+
+ifeq ($(DEBUG), 0)
+CFLAGS += -DNDEBUG
+endif
+
+ifeq ($(DEBUG), 1)
+CFLAGS += -DDEBUG
+TEST_ARGS += --debug=$(DEBUGGER)
+endif
+
 VALGRIND = valgrind
 VALGRIND_OPTS = --leak-check=yes --trace-children=yes
 
@@ -47,7 +62,10 @@ run: build
 	$(TARGET)
 
 test: build-tests
-	$(TEST_TARGET)
+	$(TEST_TARGET) $(TEST_ARGS)
+
+debug: build_tests
+	$(GDB) -q $(TEST_TARGET)
 
 check-memory: $(TARGET)
 	$(VALGRIND) $(VALGRIND_OPTS) ./$<
