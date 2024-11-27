@@ -14,14 +14,6 @@
 #define MAX_NUM 9
 
 
-static void fatal_error(char * message) {
-    perror(message);
-    exit(EXIT_FAILURE);
-}
-
-
-
-
 // void test_sample_string(void) {
 //     #define SAMPLES -100, 25, -939, 33, 896, -1252, 94837, -923458
 //     int samples[] = {SAMPLES};
