@@ -4,7 +4,6 @@
 #include "utils.h"
 
 
-
 struct array_to_string_params {
     int test_samples[8];
     int sample_size;

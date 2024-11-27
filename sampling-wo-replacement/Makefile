@@ -6,14 +6,14 @@ VALGRIND = valgrind
 
 
 # Directories
-BIN_DIR = bin/
-BUILD_DIR = build/
-INCLUDE_DIR = include/
-SRC_DIR = src/
-TESTS_DIR = tests/
-TESTS_BIN_DIR = $(TESTS_DIR)bin/
-TESTS_BUILD_DIR = $(TESTS_DIR)build/
-TESTS_SRC_DIR = $(TESTS_DIR)src/
+BIN_DIR = bin
+BUILD_DIR = build
+INCLUDE_DIR = include
+SRC_DIR = src
+TESTS_DIR = tests
+TESTS_BIN_DIR = $(TESTS_DIR)/bin
+TESTS_BUILD_DIR = $(TESTS_DIR)/build
+TESTS_SRC_DIR = $(TESTS_DIR)/src
 
 
 # Flags and options
@@ -42,18 +42,18 @@ endif
 VALGRIND_OPTS = --leak-check=yes --trace-children=yes
 
 
+# Files
+OBJ_FILES = $(BUILD_DIR)/sample.o $(BUILD_DIR)/utils.o
+TESTS_SRC_FILES := $(wildcard $(TESTS_SRC_DIR)*.c)
+TESTS_OBJ_FILES = $(TESTS_BUILD_DIR)/test-utils.o
+
+
 # Targets
-TARGET = $(BIN_DIR)sample-test
-TESTS_TARGET = $(TESTS_BIN_DIR)tests
+TARGET = $(BIN_DIR)/sample-test
+TESTS_TARGET = $(TESTS_BIN_DIR)/tests
 
 
-.PHONY: all build build-tests clean
-
-all: build build-tests
-
-build: $(BUILD_DIR) $(BIN_DIR) $(TARGET)
-
-build-tests: $(TESTS_DIR) $(TESTS_BUILD_DIR) $(TESTS_BIN_DIR) $(TESTS_TARGET)
+# Build targets
 
 $(BIN_DIR):
 	mkdir -p $@
@@ -67,32 +67,37 @@ $(TESTS_BUILD_DIR):
 $(TESTS_BIN_DIR):
 	mkdir -p $@
 
-$(TARGET): $(BUILD_DIR)sample.o $(BUILD_DIR)test-criterion.o
+$(TARGET): $(BUILD_DIR)/sample.o $(BUILD_DIR)/test-criterion.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -o $@ $<
 	 chmod 777 $@
 
-$(BUILD_DIR)sample.o: $(SRC_DIR)sample.c $(INCLUDE_DIR)sample.h
+$(BUILD_DIR)/sample.o: $(SRC_DIR)/sample.c $(INCLUDE_DIR)/sample.h
 	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
 
-$(BUILD_DIR)utils.o: $(SRC_DIR)utils.c $(INCLUDE_DIR)utils.h
+$(BUILD_DIR)/utils.o: $(SRC_DIR)/utils.c $(INCLUDE_DIR)/utils.h
 	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
 
-$(BUILD_DIR)test.o: $(TEST_SRC_DIR)test.c $(INCLUDE_DIR)sample.h
+$(BUILD_DIR)/test.o: $(TESTS_SRC_DIR)/test.c $(INCLUDE_DIR)/sample.h
 	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
 
-$(TESTS_BUILD_DIR)test-criterion.o: $(TESTS_SRC_DIR)test-criterion.c $(INCLUDE_DIR)sample.h
+$(TESTS_BUILD_DIR)/test-utils.o: $(TESTS_SRC_DIR)/test-utils.c $(INCLUDE_DIR)/utils.h
 	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
 
-$(TESTS_TARGET): $(TESTS_BUILD_DIR)test-criterion.o $(BUILD_DIR)sample.o 
+$(TESTS_TARGET): $(OBJ_FILES) $(TESTS_OBJ_FILES) 
 	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -o $@ $^
 	 chmod 777 $@
 
-$(TESTS_BUILD_DIR)test-utils.o: $(TESTS_SRC_DIR)test-utils.c $(INCLUDE_DIR)utils.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
 
-$(TESTS_BIN_DIR)test-utils: $(TESTS_BUILD_DIR)test-utils.o $(BUILD_DIR)utils.o 
-	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -o $@ $^
-	 chmod 777 $@
+# Phony targets
+
+.PHONY: all build build-tests clean run test debug check-memory \
+	check-tests-memory
+
+all: build build-tests
+
+build: $(BUILD_DIR) $(BIN_DIR) $(TARGET)
+
+build-tests: $(TESTS_DIR) $(TESTS_BUILD_DIR) $(TESTS_BIN_DIR) $(TESTS_TARGET)
 
 run: build
 	$(TARGET)
@@ -110,4 +115,4 @@ check-tests-memory: $(TESTS_TARGET)
 	$(VALGRIND) $(VALGRIND_OPTS) ./$<
 
 clean:
-	rm -f ./*.o ./*.exe $(BIN_DIR)* $(BUILD_DIR)* $(TESTS_BIN_DIR)* $(TESTS_BUILD_DIR)*
+	rm -f ./*.o ./*.exe $(BIN_DIR)/* $(BUILD_DIR)/* $(TESTS_BIN_DIR)/* $(TESTS_BUILD_DIR)/*
