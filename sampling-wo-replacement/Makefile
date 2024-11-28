@@ -45,7 +45,10 @@ VALGRIND_OPTS = --leak-check=yes --trace-children=yes
 # Files
 OBJ_FILES = $(BUILD_DIR)/sample.o $(BUILD_DIR)/utils.o
 TESTS_SRC_FILES := $(wildcard $(TESTS_SRC_DIR)*.c)
-TESTS_OBJ_FILES = $(TESTS_BUILD_DIR)/test-utils.o $(TESTS_BUILD_DIR)/test-test.o
+TESTS_OBJ_FILES = \
+	$(TESTS_BUILD_DIR)/test-test.o \
+	$(TESTS_BUILD_DIR)/test-utils.o \
+	$(TESTS_BUILD_DIR)/test-sample.o
 
 
 # Targets
@@ -85,6 +88,10 @@ $(TESTS_BUILD_DIR)/test-test.o: $(TESTS_SRC_DIR)/test-test.c
 	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
 
 $(TESTS_BUILD_DIR)/test-utils.o: $(TESTS_SRC_DIR)/test-utils.c $(INCLUDE_DIR)/utils.h
+	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
+
+$(TESTS_BUILD_DIR)/test-sample.o: $(TESTS_SRC_DIR)/test-sample.c \
+	$(INCLUDE_DIR)/sample.h $(INCLUDE_DIR)/utils.h
 	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
 
 $(TESTS_TARGET): $(OBJ_FILES) $(TESTS_OBJ_FILES) 
