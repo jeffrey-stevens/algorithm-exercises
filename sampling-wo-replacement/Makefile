@@ -13,7 +13,7 @@ SRC_DIR = src
 TESTS_DIR = tests
 TESTS_BIN_DIR = $(TESTS_DIR)/bin
 TESTS_BUILD_DIR = $(TESTS_DIR)/build
-TESTS_SRC_DIR = $(TESTS_DIR)/src
+TESTS_SRC_DIR = $(TESTS_DIR)/test
 
 
 # Flags and options
