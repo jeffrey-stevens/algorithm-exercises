@@ -118,7 +118,7 @@ Test(gen_sample, range, .description =
 
 
 Test(gen_sample, size_eq_range, .description = 
-    "Test that sample_size = number range generates all integers"
+    "Test that sample_size = number range generates all integers "
     "in that range.") {
 
     int min_int = 0;

@@ -52,7 +52,6 @@ TESTS_OBJ_FILES = \
 
 
 # Targets
-TARGET = $(BIN_DIR)/sample-test
 TESTS_TARGET = $(TESTS_BIN_DIR)/tests
 
 
@@ -70,17 +69,11 @@ $(TESTS_BUILD_DIR):
 $(TESTS_BIN_DIR):
 	mkdir -p $@
 
-$(TARGET): $(BUILD_DIR)/sample.o $(BUILD_DIR)/test-criterion.o
-	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -o $@ $<
-	 chmod 777 $@
 
 $(BUILD_DIR)/sample.o: $(SRC_DIR)/sample.c $(INCLUDE_DIR)/sample.h
 	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
 
 $(BUILD_DIR)/utils.o: $(SRC_DIR)/utils.c $(INCLUDE_DIR)/utils.h
-	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
-
-$(BUILD_DIR)/test.o: $(TESTS_SRC_DIR)/test.c $(INCLUDE_DIR)/sample.h
 	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
 
 
@@ -101,17 +94,11 @@ $(TESTS_TARGET): $(OBJ_FILES) $(TESTS_OBJ_FILES)
 
 # Phony targets
 
-.PHONY: all build build-tests clean run test debug check-memory \
-	check-tests-memory
+.PHONY: all build-tests test debug check-memory-tests clean \
 
-all: build build-tests
-
-build: $(BUILD_DIR) $(BIN_DIR) $(TARGET)
+all: build-tests
 
 build-tests: $(TESTS_DIR) $(TESTS_BUILD_DIR) $(TESTS_BIN_DIR) $(TESTS_TARGET)
-
-run: build
-	$(TARGET)
 
 test: build-tests
 	$(TESTS_TARGET) $(TESTS_OPTS)
@@ -119,10 +106,7 @@ test: build-tests
 debug: build_tests
 	$(GDB) -q $(TESTS_TARGET)
 
-check-memory: $(TARGET)
-	$(VALGRIND) $(VALGRIND_OPTS) ./$<
-
-check-tests-memory: $(TESTS_TARGET)
+check-memory-tests: $(TESTS_TARGET)
 	$(VALGRIND) $(VALGRIND_OPTS) ./$<
 
 clean:
