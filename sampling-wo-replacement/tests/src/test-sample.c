@@ -68,8 +68,8 @@ Test(gen_sample, range, .description =
 
 
 Test(gen_sample, size_eq_range, .description = 
-    "Test that the sample size = the number range generates all integers"
-    "in that range,") {
+    "Test that sample_size = number range generates all integers"
+    "in that range.") {
 
     int min_int = 0;
     int max_int = 9;
@@ -94,3 +94,23 @@ Test(gen_sample, size_eq_range, .description =
 
     free(samples);
 }
+
+
+Test(gen_sample, size_gt_range, .description =
+    "Test that the sample_size > number range returns error code "
+    "ERR_SAMPLE_SIZE_TOO_LARGE") {
+
+    int min_int = 0;
+    int max_int = 9;
+    int range = max_int - min_int + 1;
+    int sample_size = range + 1;
+
+    int * samples = int_array(sample_size);
+    int retval = gen_sample(sample_size, min_int, max_int, samples);
+
+    cr_expect(eq(int, retval, ERR_SAMPLE_SIZE_TOO_LARGE),
+        "Error code: %d.  min_int = %d, max_int = %d, sample_size = %d.",
+        ERR_SAMPLE_SIZE_TOO_LARGE, min_int, max_int, sample_size);
+
+    free(samples);
+    }
