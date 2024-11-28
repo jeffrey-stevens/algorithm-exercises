@@ -65,3 +65,32 @@ Test(gen_sample, range, .description =
 
     free(samples);
 }
+
+
+Test(gen_sample, size_eq_range, .description = 
+    "Test that the sample size = the number range generates all integers"
+    "in that range,") {
+
+    int min_int = 0;
+    int max_int = 9;
+    int range = max_int - min_int + 1;
+    int sample_size = range;
+
+    int * samples = int_array(sample_size);
+    int retval = gen_sample(sample_size, min_int, max_int, samples);
+
+    cr_assert(eq(int, retval, ERR_SUCCESS));
+
+    sort_int_array(sample_size, samples);
+
+    int i = 0;
+    bool all_match = true;
+    while (i < sample_size && all_match) {
+        all_match = samples[i] == min_int + i;
+        ++i;
+    }
+
+    cr_expect(all_match);
+
+    free(samples);
+}
