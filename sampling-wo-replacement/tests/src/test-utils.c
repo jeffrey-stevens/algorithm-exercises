@@ -1,5 +1,6 @@
 #include <criterion/criterion.h>
 #include <criterion/parameterized.h>
+#include <criterion/new/assert.h>
 
 #include "utils.h"
 
@@ -46,14 +47,14 @@ ParameterizedTest(struct array_to_string_params * params, array_to_string, seria
     //     "Test string: %s\n"
     //     "Expected string: %s\n",
     //     test_size, expected_size);
-    cr_assert(test_size == expected_size);
+    cr_assert(eq(int, test_size, expected_size));
 
     // cr_expect(strncmp(test_str, params->expected_str, expected_size) == 0,
     //     "Expected serialized array to match expected string:\n"
     //     "Test string: %s\n"
     //     "Expected string: %s\n",
     //     test_str, params->expected_str);
-    cr_expect(strncmp(test_str, params->expected_str, expected_size) == 0);
+    cr_expect(eq(str, test_str, params->expected_str));
 
     free(test_str);
 }
