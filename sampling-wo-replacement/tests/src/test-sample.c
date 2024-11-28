@@ -12,6 +12,56 @@
 #include "utils.h"
 
 
+Test(gen_sample, basic_usage, .description = 
+    "Tests gen_sample() on a limited sample size and range.") {
+
+    int sample_size = 20;
+    int array_size = sample_size + 10;
+    int min_int = 1;
+    int max_int = 100;
+
+    int * samples = int_array(array_size);
+
+    // Initialize the array
+    for (int i = 0; i < array_size; ++i) {
+        samples[i] = 0;
+    }
+
+    int retval = gen_sample(sample_size, min_int, max_int, samples);
+
+    cr_assert(eq(int, retval, ERR_SUCCESS));
+
+    // Test that all samples are in range
+    bool all_in_range = true;
+    for (int i = 0; i < sample_size && all_in_range; ++i) {
+        all_in_range = samples[i] >= min_int && samples[i] <= max_int;
+    }
+
+    cr_expect(all_in_range);
+
+    // Test that the gen_samples didn't overwrite the samples range
+    bool all_zero = true;
+    for (int i = sample_size; i < array_size && all_zero; ++i) {
+        all_zero = samples[i] == 0;
+    }
+
+    cr_expect(all_zero);
+
+    // Test that there are no duplicated samples
+    sort_int_array(sample_size, samples);
+    bool no_duplicates = true;
+    if (sample_size > 0) {
+        for (int i = 0; i < sample_size - 1 && no_duplicates; ++i) {
+            no_duplicates = samples[i] < samples[i + 1];
+        }
+    }
+
+    cr_expect(no_duplicates);
+
+    free(samples);
+}
+
+
 Test(gen_sample, min_eq_max, .description = 
     "Test that min_int = max_int generates min_int/max_int." ) {
 
