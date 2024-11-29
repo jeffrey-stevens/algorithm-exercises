@@ -48,6 +48,7 @@ OBJ_FILES = \
 	$(BUILD_DIR)/sample.o \
 	$(BUILD_DIR)/sample-tree.o \
 	$(BUILD_DIR)/sample-hash.o \
+	$(BUILD_DIR)/permute.o \
 	$(BUILD_DIR)/utils.o
 
 TESTS_SRC_FILES := $(wildcard $(TESTS_SRC_DIR)*.c)
@@ -86,6 +87,10 @@ $(BUILD_DIR)/sample-tree.o: $(SRC_DIR)/sample-tree.c \
 
 $(BUILD_DIR)/sample-hash.o: $(SRC_DIR)/sample-hash.c \
 		$(INCLUDE_DIR)/sample.h $(INCLUDE_DIR)/utils.h $(INCLUDE_DIR)/testing.h 
+	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
+
+$(BUILD_DIR)/permute.o: $(SRC_DIR)/permute.c \
+		$(INCLUDE_DIR)/permute.h
 	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
 
 $(BUILD_DIR)/utils.o: $(SRC_DIR)/utils.c $(INCLUDE_DIR)/utils.h

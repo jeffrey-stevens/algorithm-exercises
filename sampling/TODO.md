@@ -12,6 +12,8 @@
 * Give option for running the dummy Criterion tests.
 * Give random seed in random sampling functions?
   * Not sure if this is a good idea...
+* Makefile
+  * Auto detection of dependencies
 
 
 ## Features
