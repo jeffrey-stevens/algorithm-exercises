@@ -5,10 +5,12 @@
 
 * Create a README
 
+
 ## Enhancements
 
 * Make the distribution of random numbers truely uniform.
-* Implement gen_sample() as a hash
+* Give option for running the dummy Criterion tests.
+
 
 ## Features
 
@@ -20,4 +22,14 @@
   * Sample size, sample range, random seed, outfile as arguments
   * Output one integer per line
 
+
+## Tests
+
+* Set up mechanism for testing internal functions
+
+
+## Other functions
+
+* Hash table implementation of gen_samples()
 * Generate random permutations
+* Sample from a population

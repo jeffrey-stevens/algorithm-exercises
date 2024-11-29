@@ -103,6 +103,38 @@ STATIC void free_tree(Tree * tree) {
 }
 
 
+STATIC int validate_inputs(int sample_size, int min_int, int max_int,
+        int * sample) {
+
+    int err_code = -1;
+
+    if (sample == NULL) {
+        err_code = ERR_NULL_ARRAY_POINTER;
+
+    } else if (sample_size < 0) {
+        err_code = ERR_NEG_SAMPLE_SIZE;
+
+    } else if (min_int > max_int) {
+        err_code = ERR_MIN_GT_MAX;
+
+    } else if (min_int < 0 && max_int > RAND_MAX + min_int - 1) {
+        // Want max_int - min_int + 1 <= RAND_MAX.
+        // Must rewrite this to avoid overflow...
+        err_code = ERR_RANGE_TOO_LARGE;
+
+    } else if (max_int - min_int + 1 < sample_size) {
+        // The range is less than the sample size
+        // Not possible to have distinct elements
+        err_code = ERR_SAMPLE_SIZE_TOO_LARGE;
+
+    } else {
+        err_code = ERR_SUCCESS;
+    }
+
+    return err_code;
+}
+
+
 /*
  * gen_sample()
  * 
@@ -122,33 +154,15 @@ STATIC void free_tree(Tree * tree) {
 */
 int gen_sample(int sample_size, int min_int, int max_int, int * sample) {
 
-    if (sample == NULL) {
-        return ERR_NULL_ARRAY_POINTER;
-    }
+    int err_code = validate_inputs(sample_size, min_int, max_int, sample);
 
-    if (sample_size < 0) {
-        return ERR_NEG_SAMPLE_SIZE;
-    }
-
-    if (min_int > max_int) {
-        return ERR_MIN_GT_MAX;
-    }
-
-    // Want max_int - min_int + 1 <= RAND_MAX.
-    // Must rewrite this to avoid overflow...
-    if (min_int < 0 && max_int > RAND_MAX + min_int - 1) {
-        return ERR_RANGE_TOO_LARGE;
-    }
-
-    int range = max_int - min_int + 1;
-
-    if (range < sample_size) {
-        // Not possible to have distinct elements
-        return ERR_SAMPLE_SIZE_TOO_LARGE;
+    if (err_code != ERR_SUCCESS) {
+        return err_code;
     }
 
     Tree tree = NULL;
 
+    int range = max_int - min_int + 1;
     int i = 0;
     int num;
 
@@ -178,6 +192,14 @@ int gen_sample(int sample_size, int min_int, int max_int, int * sample) {
     }
 
     free_tree(&tree);
+
+    return ERR_SUCCESS;
+}
+
+
+int gen_sample_hash(int sample_size, int min_int, int max_int, int * sample) {
+
+    int err_code = validate_inputs(sample_size, min_int, max_int, sample);
 
     return ERR_SUCCESS;
 }
