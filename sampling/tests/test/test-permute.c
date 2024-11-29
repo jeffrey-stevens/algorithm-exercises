@@ -29,6 +29,7 @@ Test(permutation, array_null, .description =
     cr_assert(eq(int, err_code, PERM_ERR_NULL_ARRAY));
 }
 
+
 Test(permutation, n_zero, .description =
         "Test that n = 0 returns PERM_ERR_SUCCESS and doesn't change the array.") {
 
@@ -45,6 +46,30 @@ Test(permutation, n_zero, .description =
 
     cr_assert(eq(int, err_code, PERM_ERR_SUCCESS));
     cr_expect(eq(int[size], test_array, ref_array));
+
+    free(test_array);
+}
+
+
+Test(permutation, is_permutation, .description =
+        "Test that permute() contains all integers 0, ..., n - 1.") {
+
+    int n = 100;
+
+    int * test_array = int_array(n);
+    int err_code = permutation(n, test_array);
+
+    cr_assert(eq(int, err_code, PERM_ERR_SUCCESS));
+
+    // Sort the array and verify that it is equal to [0, ..., n - 1].
+    sort_int_array(n, test_array);
+    
+    bool all_equal = true;
+    for (int i = 0; i < n && all_equal; ++i) {
+        all_equal = test_array[i] == i;
+    }
+    
+    cr_expect(all_equal);
 
     free(test_array);
 }
