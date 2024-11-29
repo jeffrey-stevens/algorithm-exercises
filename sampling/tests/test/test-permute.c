@@ -30,7 +30,7 @@ Test(permutation, array_null, .description =
 }
 
 
-Test(permutation, n_zero, .description =
+Test(permutation, n_eq_zero, .description =
         "Test that n = 0 returns PERM_ERR_SUCCESS and doesn't change the array.") {
 
     int n = 0;
@@ -52,7 +52,7 @@ Test(permutation, n_zero, .description =
 
 
 Test(permutation, is_permutation, .description =
-        "Test that permute() contains all integers 0, ..., n - 1.") {
+        "Verifies that permutation() contains all integers 0, ..., n - 1.") {
 
     int n = 100;
 
@@ -60,6 +60,18 @@ Test(permutation, is_permutation, .description =
     int err_code = permutation(n, test_array);
 
     cr_assert(eq(int, err_code, PERM_ERR_SUCCESS));
+
+    // Warn if the permutation is not a proper (i.e. nontrivial) permutation
+    bool is_permuted = false;
+    for (int i = 0; i < n && !is_permuted; ++i) {
+        is_permuted = test_array[i] != i;
+    }
+
+    if (is_permuted) {
+        cr_log_info("Generated a nontrivial permutation.");
+    } else {
+        cr_log_warn("Generated the trivial permutation.");
+    }
 
     // Sort the array and verify that it is equal to [0, ..., n - 1].
     sort_int_array(n, test_array);
@@ -70,6 +82,33 @@ Test(permutation, is_permutation, .description =
     }
     
     cr_expect(all_equal);
+
+    free(test_array);
+}
+
+
+Test(permutation, does_not_overwrite, .description =
+        "Verifies that permutation() does not overwrite elements past index n - 1.") {
+
+    int n = 100;
+    int size = n + 10;
+
+    // Initialize the end of the test array
+    int * test_array = int_array(size);
+    for (int i = n; i < size; ++i) {
+        test_array[i] = -1;
+    }
+
+    int err_code = permutation(n, test_array);
+
+    cr_assert(eq(int, err_code, PERM_ERR_SUCCESS));
+    
+    bool any_changed = false;
+    for (int i = n; i < size && !any_changed; ++i) {
+        any_changed = test_array[i] != -1;
+    }
+    
+    cr_expect(not(any_changed));
 
     free(test_array);
 }

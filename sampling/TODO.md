@@ -15,6 +15,7 @@
   * Not sure if this is a good idea...
 * Makefile
   * Auto detection of dependencies
+  * Show info messages by default
 
 
 ## Features
