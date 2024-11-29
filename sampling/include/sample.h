@@ -9,6 +9,8 @@
 #define ERR_SAMPLE_SIZE_TOO_LARGE   5
 
 
-int gen_sample(int sample_size, int min_int, int max_int, int * sample);
+int validate_inputs(int sample_size, int min_int, int max_int, int * sample);
+int gen_sample_tree(int sample_size, int min_int, int max_int, int * sample);
+int gen_sample_hash(int sample_size, int min_int, int max_int, int * sample);
 
 #endif

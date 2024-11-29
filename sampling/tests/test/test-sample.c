@@ -12,8 +12,8 @@
 #include "utils.h"
 
 
-Test(gen_sample, basic_usage, .description = 
-    "Tests gen_sample() on a limited sample size and range.") {
+Test(gen_sample_tree, basic_usage, .description = 
+    "Tests gen_sample_tree() on a limited sample size and range.") {
 
     int sample_size = 20;
     int array_size = sample_size + 10;
@@ -27,7 +27,7 @@ Test(gen_sample, basic_usage, .description =
         samples[i] = 0;
     }
 
-    int retval = gen_sample(sample_size, min_int, max_int, samples);
+    int retval = gen_sample_tree(sample_size, min_int, max_int, samples);
 
     cr_assert(eq(int, retval, ERR_SUCCESS));
 
@@ -39,7 +39,7 @@ Test(gen_sample, basic_usage, .description =
 
     cr_expect(all_in_range);
 
-    // Test that the gen_samples didn't overwrite the samples range
+    // Test that the gen_sample_trees didn't overwrite the samples range
     bool all_zero = true;
     for (int i = sample_size; i < array_size && all_zero; ++i) {
         all_zero = samples[i] == 0;
@@ -62,7 +62,7 @@ Test(gen_sample, basic_usage, .description =
 }
 
 
-Test(gen_sample, min_eq_max, .description = 
+Test(gen_sample_tree, min_eq_max, .description = 
     "Test that min_int = max_int generates min_int/max_int." ) {
 
     int min_int = 10;
@@ -71,7 +71,7 @@ Test(gen_sample, min_eq_max, .description =
 
     int * samples = int_array(sample_size);
 
-    int retval = gen_sample(sample_size, min_int, max_int, samples);
+    int retval = gen_sample_tree(sample_size, min_int, max_int, samples);
 
     cr_assert(eq(int, retval, ERR_SUCCESS));
     cr_expect(eq(int, samples[0], min_int));
@@ -80,7 +80,7 @@ Test(gen_sample, min_eq_max, .description =
 }
 
 
-Test(gen_sample, min_gt_max, .description = 
+Test(gen_sample_tree, min_gt_max, .description = 
     "Test for ERR_MIN_GT_MAX error if min_int > max_int.") {
 
     int min_int = 10;
@@ -88,7 +88,7 @@ Test(gen_sample, min_gt_max, .description =
     int sample_size = 10;
 
     int * samples = int_array(sample_size);
-    int retval = gen_sample(sample_size, min_int, max_int, samples);
+    int retval = gen_sample_tree(sample_size, min_int, max_int, samples);
 
     cr_expect(eq(int, retval, ERR_MIN_GT_MAX),
         "Error code: %d.  min_int = %d, max_int = %d.",
@@ -98,7 +98,7 @@ Test(gen_sample, min_gt_max, .description =
 }
 
 
-Test(gen_sample, range, .description = 
+Test(gen_sample_tree, range, .description = 
     "Testing that max_int - min_int > RAND_MAX returns error code "
     "ERR_RANGE_TOO_LARGE.") {
 
@@ -107,7 +107,7 @@ Test(gen_sample, range, .description =
     int sample_size = 10;
 
     int * samples = int_array(sample_size);
-    int retval = gen_sample(sample_size, min_int, max_int, samples);
+    int retval = gen_sample_tree(sample_size, min_int, max_int, samples);
 
     cr_expect(eq(int, retval, ERR_RANGE_TOO_LARGE),
         "Error code: %d.  min_int = %d, max_int = %d, RAND_MAX = %d.",
@@ -117,7 +117,7 @@ Test(gen_sample, range, .description =
 }
 
 
-Test(gen_sample, size_eq_range, .description = 
+Test(gen_sample_tree, size_eq_range, .description = 
     "Test that sample_size = number range generates all integers "
     "in that range.") {
 
@@ -127,7 +127,7 @@ Test(gen_sample, size_eq_range, .description =
     int sample_size = range;
 
     int * samples = int_array(sample_size);
-    int retval = gen_sample(sample_size, min_int, max_int, samples);
+    int retval = gen_sample_tree(sample_size, min_int, max_int, samples);
 
     cr_assert(eq(int, retval, ERR_SUCCESS));
 
@@ -146,7 +146,7 @@ Test(gen_sample, size_eq_range, .description =
 }
 
 
-Test(gen_sample, size_gt_range, .description =
+Test(gen_sample_tree, size_gt_range, .description =
     "Test that the sample_size > number range returns error code "
     "ERR_SAMPLE_SIZE_TOO_LARGE") {
 
@@ -156,7 +156,7 @@ Test(gen_sample, size_gt_range, .description =
     int sample_size = range + 1;
 
     int * samples = int_array(sample_size);
-    int retval = gen_sample(sample_size, min_int, max_int, samples);
+    int retval = gen_sample_tree(sample_size, min_int, max_int, samples);
 
     cr_expect(eq(int, retval, ERR_SAMPLE_SIZE_TOO_LARGE),
         "Error code: %d.  min_int = %d, max_int = %d, sample_size = %d.",

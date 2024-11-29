@@ -43,7 +43,13 @@ VALGRIND_OPTS = --leak-check=yes --trace-children=yes
 
 
 # Files
-OBJ_FILES = $(BUILD_DIR)/sample.o $(BUILD_DIR)/utils.o
+
+OBJ_FILES = \
+	$(BUILD_DIR)/sample.o \
+	$(BUILD_DIR)/sample-tree.o \
+	$(BUILD_DIR)/sample-hash.o \
+	$(BUILD_DIR)/utils.o
+
 TESTS_SRC_FILES := $(wildcard $(TESTS_SRC_DIR)*.c)
 TESTS_OBJ_FILES = \
 	$(TESTS_BUILD_DIR)/test-criterion.o \
@@ -70,8 +76,16 @@ $(TESTS_BIN_DIR):
 	mkdir -p $@
 
 
-$(BUILD_DIR)/sample.o: $(SRC_DIR)/sample.c $(INCLUDE_DIR)/sample.h \
-		$(INCLUDE_DIR)/utils.h $(INCLUDE_DIR)/testing.h 
+$(BUILD_DIR)/sample.o: $(SRC_DIR)/sample.c \
+		$(INCLUDE_DIR)/sample.h $(INCLUDE_DIR)/utils.h $(INCLUDE_DIR)/testing.h 
+	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
+
+$(BUILD_DIR)/sample-tree.o: $(SRC_DIR)/sample-tree.c \
+		$(INCLUDE_DIR)/sample.h $(INCLUDE_DIR)/utils.h $(INCLUDE_DIR)/testing.h 
+	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
+
+$(BUILD_DIR)/sample-hash.o: $(SRC_DIR)/sample-hash.c \
+		$(INCLUDE_DIR)/sample.h $(INCLUDE_DIR)/utils.h $(INCLUDE_DIR)/testing.h 
 	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
 
 $(BUILD_DIR)/utils.o: $(SRC_DIR)/utils.c $(INCLUDE_DIR)/utils.h
