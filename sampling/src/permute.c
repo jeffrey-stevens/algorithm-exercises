@@ -1,8 +1,6 @@
 #include <stdlib.h>
 
-#define PERM_ERR_SUCCESS 0;
-#define PERM_ERR_NEG_SIZE 1;
-#define PERM_ERR_NULL_ARRAY 2;
+#include "permute.h"
 
 
 // Generates a permutation of 0, .., n - 1.
