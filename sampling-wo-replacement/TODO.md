@@ -26,6 +26,7 @@
 ## Tests
 
 * Set up mechanism for testing internal functions
+* Check the randomness of the samplings
 
 
 ## Other functions
