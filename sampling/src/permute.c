@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <limits.h>
 
 #include "permute.h"
 
@@ -10,6 +11,10 @@ int permutation(int n, int * array) {
 
     if (n < 0) {
         return PERM_ERR_NEG_SIZE;
+    }
+
+    if (RAND_MAX < INT_MAX && n > RAND_MAX + 1) {
+        return PERM_SIZE_TOO_LARGE;
     }
 
     if (array == NULL) {

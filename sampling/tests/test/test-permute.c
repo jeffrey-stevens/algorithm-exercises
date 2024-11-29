@@ -12,14 +12,32 @@
 #include "utils.h"
 
 
+
 Test(permutation, n_neg, .description = 
-        "Test that n < 0 returns error code PERM_ERR_NEG_SIZE." ) {
+        "Test that n < 0 returns error code PERM_ERR_NEG_SIZE.") {
 
     int n = -1;
     int err_code = permutation(n, NULL);
 
     cr_assert(eq(int, err_code, PERM_ERR_NEG_SIZE));
 }
+
+
+Test(permutation, n_too_large, .description = 
+        "Test that n > RAND_MAX + 1 returns error code PERM_ERR_TOO_LARGE.") {
+
+#if (RAND_MAX < INT_MAX - 1)
+    int n = RAND_MAX + 2;
+    int err_code = permutation(n, NULL);
+
+    cr_expect(eq(int, err_code, PERM_ERR_TOO_LARGE));
+
+#else
+    cr_log_warn("RAND_MAX is too close to INT_MAX on this machine "
+        "to test permutation::n_too_large.");
+#endif
+}
+
 
 Test(permutation, array_null, .description =
         "Test that array = NULL returns PERM_ERR_NULL_ARRAY.") {
