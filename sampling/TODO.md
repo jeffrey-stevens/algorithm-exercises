@@ -1,5 +1,6 @@
 # Todo
 
+* Implement range tests for permutation().
 
 ## Components
 

@@ -24,17 +24,16 @@ Test(permutation, n_neg, .description =
 Test(permutation, array_null, .description =
         "Test that array = NULL returns PERM_ERR_NULL_ARRAY.") {
     int n = 1;
-    err_code = permutation(n, NULL);
+    int err_code = permutation(n, NULL);
 
     cr_assert(eq(int, err_code, PERM_ERR_NULL_ARRAY));
 }
 
-Test(permutation, n_zero .description =
-        "Test that n = 0 returns PERM_ERR_SUCCESS and "
-        "doesn't change the array.") {
+Test(permutation, n_zero, .description =
+        "Test that n = 0 returns PERM_ERR_SUCCESS and doesn't change the array.") {
 
     int n = 0;
-    const int ref_array[] = {6, 2, 7, 9, 4, 8, 0, 3, 1, 5};
+    int ref_array[] = {6, 2, 7, 9, 4, 8, 0, 3, 1, 5};
     int size = sizeof(ref_array) / sizeof(int);
 
     int * test_array = int_array(size);
@@ -42,7 +41,7 @@ Test(permutation, n_zero .description =
         test_array[i] = ref_array[i];
     }
 
-    err_code = permutation(n, test_array);
+    int err_code = permutation(n, test_array);
 
     cr_assert(eq(int, err_code, PERM_ERR_SUCCESS));
     cr_expect(eq(int[size], test_array, ref_array));

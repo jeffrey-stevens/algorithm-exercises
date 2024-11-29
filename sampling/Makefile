@@ -55,7 +55,8 @@ TESTS_SRC_FILES := $(wildcard $(TESTS_SRC_DIR)*.c)
 TESTS_OBJ_FILES = \
 	$(TESTS_BUILD_DIR)/test-criterion.o \
 	$(TESTS_BUILD_DIR)/test-utils.o \
-	$(TESTS_BUILD_DIR)/test-sample.o
+	$(TESTS_BUILD_DIR)/test-sample.o \
+	$(TESTS_BUILD_DIR)/test-permute.o
 
 
 # Targets
@@ -105,6 +106,10 @@ $(TESTS_BUILD_DIR)/test-utils.o: $(TESTS_SRC_DIR)/test-utils.c $(INCLUDE_DIR)/ut
 
 $(TESTS_BUILD_DIR)/test-sample.o: $(TESTS_SRC_DIR)/test-sample.c \
 	$(INCLUDE_DIR)/sample.h $(INCLUDE_DIR)/utils.h
+	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
+
+$(TESTS_BUILD_DIR)/test-permute.o: $(TESTS_SRC_DIR)/test-permute.c \
+	$(INCLUDE_DIR)/permute.h $(INCLUDE_DIR)/utils.h
 	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
 
 $(TESTS_TARGET): $(OBJ_FILES) $(TESTS_OBJ_FILES) 
