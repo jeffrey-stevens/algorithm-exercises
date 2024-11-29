@@ -70,7 +70,8 @@ $(TESTS_BIN_DIR):
 	mkdir -p $@
 
 
-$(BUILD_DIR)/sample.o: $(SRC_DIR)/sample.c $(INCLUDE_DIR)/sample.h
+$(BUILD_DIR)/sample.o: $(SRC_DIR)/sample.c $(INCLUDE_DIR)/sample.h \
+		$(INCLUDE_DIR)/utils.h $(INCLUDE_DIR)/testing.h 
 	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
 
 $(BUILD_DIR)/utils.o: $(SRC_DIR)/utils.c $(INCLUDE_DIR)/utils.h

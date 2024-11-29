@@ -1,6 +1,5 @@
 # Todo
 
-* Implement tests
 
 ## Components
 
@@ -9,7 +8,7 @@
 ## Enhancements
 
 * Make the distribution of random numbers truely uniform.
-* Integrate Criterion unit testing
+* Implement gen_sample() as a hash
 
 ## Features
 
@@ -20,3 +19,5 @@
 * Make sampling-wo-replacement into a command
   * Sample size, sample range, random seed, outfile as arguments
   * Output one integer per line
+
+* Generate random permutations

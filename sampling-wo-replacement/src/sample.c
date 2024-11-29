@@ -4,6 +4,7 @@
 */
 
 #include "sample.h"
+#include "utils.h"
 #include "testing.h"
 
 #include <stdlib.h>
@@ -21,12 +22,6 @@ struct NumNode {
 };
 
 typedef Node * Tree;
-
-
-static void fatal_error(char * message) {
-    perror(message);
-    exit(EXIT_FAILURE);
-}
 
 
 STATIC Node * new_node(int num, Node * left, Node * right) {
@@ -169,6 +164,11 @@ int gen_sample(int sample_size, int min_int, int max_int, int * sample) {
         bool found;
         while ( (found = insert_num(&tree, num)) ) {
             // Try the next number
+            // Not sure if this is a valid approach.  The thinking is that if the original
+            // number is random, then incrementing the number would essentially be random.
+            // This shouldn't result in positional clustering, but it may cause numerical
+            // clustering...Choosing another random number would be problematic when
+            // The sample size is near the size of the numerical range...
             num = min_int + (num + 1) % range;
         }
 
