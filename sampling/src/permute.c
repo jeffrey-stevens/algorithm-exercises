@@ -6,7 +6,7 @@
 // Generates a permutation of 0, .., n - 1.
 // Assumes that rand seed has been set...
 //
-int permutation(int n, int array[]) {
+int permutation(int n, int * array) {
 
     if (n < 0) {
         return PERM_ERR_NEG_SIZE;
