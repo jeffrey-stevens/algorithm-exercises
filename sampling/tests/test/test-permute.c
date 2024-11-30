@@ -193,3 +193,34 @@ Test(permutation, no_repetition, .description =
     free(test_array1);
     free(test_array2);
 }
+
+
+Test(permutation, same_seed, .description =
+        "Verifies that setting the seed generates the same permutation.") {
+
+    // The number of permutations is n!, so it extremely unlikely that
+    // two permutations match by coincidence for even modest n...
+    int n = 100;
+    unsigned int seed = 12345;
+
+    int * test_array1 = int_array(n);
+    int * test_array2 = int_array(n);
+
+    srand(seed);
+    int err_code1 = permutation(n, test_array1);
+    srand(seed);
+    int err_code2 = permutation(n, test_array2);
+
+    cr_assert(eq(int, err_code1, PERM_ERR_SUCCESS));
+    cr_assert(eq(int, err_code2, PERM_ERR_SUCCESS));
+    
+    bool all_equal = true;
+    for(int i = 0; i < n && all_equal; ++i) {
+        all_equal = test_array1[i] == test_array2[i];
+    }
+
+    cr_expect(all_equal);
+
+    free(test_array1);
+    free(test_array2);
+}

@@ -38,7 +38,6 @@
 * permutation()
   * Test if setting seed generates same permutation
   * Fail if large n produces the trivial permutation?
-  * Fail if running permutation() twice in a row generates the same permutation (for large n)
 
 
 ## Other functions
