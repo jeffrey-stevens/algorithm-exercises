@@ -15,6 +15,12 @@
 * Permutations/Sampling
 
 
+# Sorting
+
+* Comparing two arrays
+  * Can do this quickly with quicksort
+
+
 ## Permutations and sampling
 
 * Shuffling through incremented transpositions

@@ -81,6 +81,28 @@ char * int_array_to_string(int size, int * array) {
 }
 
 
+bool int_arrays_equal(int size, int * array1, int * array2) {
+
+    bool all_equal = true;
+    for (int i = 0; i < size && all_equal; ++i) {
+        all_equal = array1[i] == array2[i];
+    }
+
+    return all_equal;
+}
+
+
+int * copy_int_array(int n, int * array) {
+
+    int size = n * sizeof(int);
+
+    int * acopy = (int *) malloc(size);
+    memcpy(acopy, array, size);
+
+    return acopy;
+}
+
+
 static int compare_ints(const void * val1, const void * val2) {
     int * int1 = (int *) val1;
     int * int2 = (int *) val2;

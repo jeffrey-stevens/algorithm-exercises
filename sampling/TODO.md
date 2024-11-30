@@ -1,8 +1,7 @@
 # Todo
 
 * Implement tests for permute().
-* Add tests to test-utils.c
-  * Test a large array (using a regular pattern)
+* Input validation for is_permuted(), etc.
 
 
 ## Components
@@ -21,6 +20,12 @@
 * Testing
   * Give option for running the dummy Criterion tests.
 * Consolidate error codes
+* Implement array comparison as quicksort
+
+
+## Refactoring
+
+* Move array utility functions to another file?
 
 
 ## Features
@@ -38,10 +43,12 @@
 
 * Set up mechanism for testing internal (static) functions
 * Check the randomness of the samplings
-* permute()
-  * Test the input conditions
+* permute.c
+  * Write tests for permute_()
+  * Test permute() input conditions
   * Test that permute() does indeed permute an array
-  * Verify that permute() does work with duplicates (unlike permutation())
+* utils.c
+  * Write tests for array functions
 
 
 ## Other functions

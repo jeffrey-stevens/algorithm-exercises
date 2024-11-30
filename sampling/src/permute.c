@@ -82,3 +82,52 @@ int permutation(int n, int * array) {
 
     return ERR_SUCCESS;
 }
+
+
+bool is_permuted(int size, int * test_array, int * ref_array) {
+
+    int * test_copy = copy_int_array(size, test_array);
+    int * ref_copy = copy_int_array(size, ref_array);
+
+    // This isn't the most efficient...
+    // Better to implement quicksort directly, and then compare
+    // the positioning of the pivots
+
+    sort_int_array(size, test_copy);
+    sort_int_array(size, ref_copy);
+
+    bool are_equal = int_arrays_equal(size, test_copy, ref_copy);
+
+    free(test_copy);
+    free(ref_copy);
+
+    return are_equal;
+}
+
+
+bool is_trivial(int size, int * array) {
+
+    bool is_sequential = false;
+    for (int i = 0; i < size && is_sequential; ++i) {
+        is_sequential = array[i] == i;
+    }
+
+    return is_sequential;
+}
+
+
+bool is_permutation(int size, int * array) {
+
+    int * acopy = copy_int_array(size, array);
+
+    sort_int_array(size, acopy);
+    
+    bool all_equal = true;
+    for (int i = 0; i < size && all_equal; ++i) {
+        all_equal = acopy[i] == i;
+    }
+
+    free(acopy);
+
+    return all_equal;
+}
