@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <limits.h>
+#include <math.h>
 
 #include <criterion/criterion.h>
 #include <criterion/parameterized.h>
@@ -11,6 +12,45 @@
 #include "permute.h"
 #include "utils.h"
 
+// Is there a better way of doing this?
+#define TEST_PERM_MAX_BITS 20   /* 1 MB */
+#define TEST_PERM_MAX_SIZE \
+        (PERMUTATION_MAX_SIZE >> TEST_PERM_MAX_BITS > 0) \
+        ? 1 << TEST_PERM_MAX_BITS : PERMUTATION_MAX_SIZE
+
+
+static void free_params(struct criterion_test_params * ctp) {
+    cr_free(ctp->params);
+}
+
+
+static bool is_trivial(int size, int * array) {
+
+    bool is_sequential = false;
+    for (int i = 0; i < size && is_sequential; ++i) {
+        is_sequential = array[i] == i;
+    }
+
+    return is_sequential;
+}
+
+
+static bool is_permutation(int size, int * array) {
+
+    int * acopy = (int *) malloc(sizeof(int) * size);
+    memcpy(acopy, array, sizeof(int) * size);
+
+    sort_int_array(size, acopy);
+    
+    bool all_equal = true;
+    for (int i = 0; i < size && all_equal; ++i) {
+        all_equal = acopy[i] == i;
+    }
+
+    free(acopy);
+
+    return all_equal;
+}
 
 
 Test(permutation, n_neg, .description = 
@@ -48,61 +88,98 @@ Test(permutation, array_null, .description =
 }
 
 
-Test(permutation, n_eq_zero, .description =
-        "Test that n = 0 returns PERM_ERR_SUCCESS and doesn't change the array.") {
+ParameterizedTestParameters(permutation, is_permutation) {
 
-    int n = 0;
-    int ref_array[] = {6, 2, 7, 9, 4, 8, 0, 3, 1, 5};
-    int size = sizeof(ref_array) / sizeof(int);
+    static int edge_ns[] = {0, TEST_PERM_MAX_SIZE};
+    int edge_size = sizeof(edge_ns) / sizeof(int);
 
-    int * test_array = int_array(size);
-    for (int i = 0; i < size; ++i) {
-        test_array[i] = ref_array[i];
+    int max_log = (int) log10((double) TEST_PERM_MAX_SIZE);
+    int internal_size = max_log + 1;
+    int total_size = edge_size + internal_size;
+
+    int * ns = (int *) cr_malloc(sizeof(int) * total_size);
+
+    memcpy(ns, edge_ns, sizeof(int) * edge_size);
+
+    // Test powers of 10 up to TEST_PERM_MAX_SIZE
+    int n = 1;
+    for (int i = edge_size; i < total_size; ++i) {
+        ns[i] = n;
+        // Doesn't matter if this overflows...
+        n *= 10;
     }
 
-    int err_code = permutation(n, test_array);
-
-    cr_assert(eq(int, err_code, PERM_ERR_SUCCESS));
-    cr_expect(eq(int[size], test_array, ref_array));
-
-    free(test_array);
+   return cr_make_param_array(int, ns, total_size, free_params);
 }
 
 
-Test(permutation, is_permutation, .description =
-        "Verifies that permutation() contains all integers 0, ..., n - 1.") {
+ParameterizedTest(int * np, permutation, is_permutation, .description =
+        "Verifies that permutation() is indeed a permutation of 0, ..., n - 1.") {
 
-    int n = 100;
-
+    int n = *np;
     int * test_array = int_array(n);
+
     int err_code = permutation(n, test_array);
 
     cr_assert(eq(int, err_code, PERM_ERR_SUCCESS));
 
     // Warn if the permutation is not a proper (i.e. nontrivial) permutation
-    bool is_permuted = false;
-    for (int i = 0; i < n && !is_permuted; ++i) {
-        is_permuted = test_array[i] != i;
-    }
-
-    if (is_permuted) {
-        cr_log_info("Generated a nontrivial permutation.");
-    } else {
-        cr_log_warn("Generated the trivial permutation.");
-    }
-
-    // Sort the array and verify that it is equal to [0, ..., n - 1].
-    sort_int_array(n, test_array);
-    
-    bool all_equal = true;
-    for (int i = 0; i < n && all_equal; ++i) {
-        all_equal = test_array[i] == i;
+    if (n > 1) {
+        if (is_trivial(n, test_array)) {
+            cr_log_warn("Generated the trivial permutation.");
+        } else {
+            cr_log_info("Generated a nontrivial permutation.");
+        }
     }
     
-    cr_expect(all_equal);
+    cr_expect(is_permutation(n, test_array));
 
     free(test_array);
 }
+
+
+// Test(permutation, n_eq_zero, .description =
+//         "Test that n = 0 returns PERM_ERR_SUCCESS and doesn't change the array.") {
+
+//     int n = 0;
+//     int ref_array[] = {6, 2, 7, 9, 4, 8, 0, 3, 1, 5};
+//     int size = sizeof(ref_array) / sizeof(int);
+
+//     int * test_array = int_array(size);
+//     for (int i = 0; i < size; ++i) {
+//         test_array[i] = ref_array[i];
+//     }
+
+//     int err_code = permutation(n, test_array);
+
+//     cr_assert(eq(int, err_code, PERM_ERR_SUCCESS));
+//     cr_expect(eq(int[size], test_array, ref_array));
+
+//     free(test_array);
+// }
+
+
+// Test(permutation, is_permutation, .description =
+//         "Verifies that permutation() contains all integers 0, ..., n - 1.") {
+
+//     int n = 100;
+
+//     int * test_array = int_array(n);
+//     int err_code = permutation(n, test_array);
+
+//     cr_assert(eq(int, err_code, PERM_ERR_SUCCESS));
+
+//     // Warn if the permutation is not a proper (i.e. nontrivial) permutation
+//     if (is_trivial(n, test_array)) {
+//         cr_log_warn("Generated the trivial permutation.");
+//     } else {
+//         cr_log_info("Generated a nontrivial permutation.");
+//     }
+    
+//     cr_expect(is_permutation(n, test_array));
+
+//     free(test_array);
+// }
 
 
 Test(permutation, does_not_overwrite, .description =

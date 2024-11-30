@@ -3,6 +3,9 @@
 
 #include "permute.h"
 
+#define PERMUTATION_MAX_SIZE \
+    (RAND_MAX == INT_MAX ? INT_MAX : RAND_MAX + 1)
+
 
 // Generates a permutation of 0, .., n - 1.
 // Assumes that rand seed has been set...
@@ -13,7 +16,7 @@ int permutation(int n, int * array) {
         return PERM_ERR_NEG_SIZE;
     }
 
-    if (RAND_MAX < INT_MAX && n > RAND_MAX + 1) {
+    if (n > PERMUTATION_MAX_SIZE) {
         return PERM_SIZE_TOO_LARGE;
     }
 
