@@ -26,15 +26,7 @@ static int validate_inputs(int n, int * array) {
 }
 
 
-// Permutes an array of n elements
-// Assumes that rand seed has been set...
-//
-int permute(int n, int * array) {
-
-    int err_code = validate_inputs(n, array);
-    if (err_code != PERM_ERR_SUCCESS) {
-        return err_code;
-    }
+static void permute_(int n, int * array) {
 
     // Iterate through each position, performing one random transposition
     // for each.
@@ -47,6 +39,20 @@ int permute(int n, int * array) {
         array[i] = array[j];
         array[j] = tmp;
     }
+}
+
+
+// Permutes an array of n elements
+// Assumes that rand seed has been set...
+//
+int permute(int n, int * array) {
+
+    int err_code = validate_inputs(n, array);
+    if (err_code != PERM_ERR_SUCCESS) {
+        return err_code;
+    }
+
+    permute_(n, array);
 
     // Once all positions have been swapped at least once, this guarantees
     // that each integer has an equal chance of being at any given position.
@@ -70,7 +76,7 @@ int permutation(int n, int * array) {
         array[i] = i;
     }
 
-    err_code = permute(n, array);
+    permute_(n, array);
 
-    return err_code;
+    return PERM_ERR_SUCCESS;
 }

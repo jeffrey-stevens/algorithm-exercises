@@ -19,6 +19,9 @@
         ? 1 << TEST_PERM_MAX_BITS : PERMUTATION_MAX_SIZE
 
 
+
+// Functions
+
 static void free_params(struct criterion_test_params * ctp) {
     cr_free(ctp->params);
 }
@@ -52,6 +55,8 @@ static bool is_permutation(int size, int * array) {
     return all_equal;
 }
 
+
+// Tests
 
 Test(permutation, n_neg, .description = 
         "Test that n < 0 returns error code PERM_ERR_NEG_SIZE.") {
