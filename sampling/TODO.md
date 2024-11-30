@@ -49,7 +49,7 @@
   * Test that permute() does indeed permute an array
 * utils.c
   * Write tests for array functions
-
+* Write tests for sample_replace().
 
 ## Other functions
 
