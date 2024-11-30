@@ -4,9 +4,10 @@
 
 #include "permute.h"
 #include "error.h"
+#include "testing.h"
 
 
-static int validate_inputs(int n, int * array) {
+STATIC int validate_inputs(int n, int * array) {
 
     int err_code = ERR_SUCCESS;
 
@@ -27,7 +28,7 @@ static int validate_inputs(int n, int * array) {
 }
 
 
-static void permute_(int n, int * array) {
+STATIC void permute_(int n, int * array) {
 
     // Iterate through each position, performing one random transposition
     // for each.

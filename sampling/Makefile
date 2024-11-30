@@ -22,7 +22,7 @@ INCLUDE_FLAGS = -I$(INCLUDE_DIR)
 WARN_FLAGS = -Wall -Wextra
 DEBUG_FLAGS = -g -O0
 
-STATE_FLAGS = -DTESTING
+STATE_FLAGS = 
 ifeq ($(DEBUG), 0)
 STATE_FLAGS += -DNDEBUG
 endif
@@ -32,6 +32,7 @@ endif
 
 CFLAGS = $(DEBUG_FLAGS) $(WARN_FLAGS) $(STATE_FLAGS) $(INCLUDE_FLAGS) $(LDFLAGS)
 
+TESTING_FLAGS=-DTESTING
 TESTS_LDFLAGS = -lcriterion
 
 TESTS_OPTS = --verbose=1 --full-stats
@@ -103,18 +104,19 @@ $(BUILD_DIR)/error.o: $(SRC_DIR)/error.c $(INCLUDE_DIR)/error.h
 
 
 $(TESTS_BUILD_DIR)/test-criterion.o: $(TESTS_SRC_DIR)/test-criterion.c
-	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) $(TESTING_FLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
 
 $(TESTS_BUILD_DIR)/test-utils.o: $(TESTS_SRC_DIR)/test-utils.c $(INCLUDE_DIR)/utils.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTING_FLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
 
 $(TESTS_BUILD_DIR)/test-sample.o: $(TESTS_SRC_DIR)/test-sample.c \
-	$(INCLUDE_DIR)/sample.h $(INCLUDE_DIR)/utils.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
+		$(INCLUDE_DIR)/sample.h $(INCLUDE_DIR)/utils.h
+	$(CC) $(CFLAGS) $(TESTING_FLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
 
 $(TESTS_BUILD_DIR)/test-permute.o: $(TESTS_SRC_DIR)/test-permute.c \
-	$(INCLUDE_DIR)/permute.h $(INCLUDE_DIR)/utils.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
+		$(INCLUDE_DIR)/permute.h $(INCLUDE_DIR)/internal/permute.h \
+		$(INCLUDE_DIR)/utils.h
+	$(CC) $(CFLAGS) $(TESTING_FLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
 
 $(TESTS_TARGET): $(OBJ_FILES) $(TESTS_OBJ_FILES) 
 	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -o $@ $^

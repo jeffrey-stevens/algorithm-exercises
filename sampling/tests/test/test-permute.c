@@ -10,6 +10,7 @@
 #include <criterion/new/assert.h>
 
 #include "permute.h"
+#include "internal/permute.h"
 #include "utils.h"
 #include "error.h"
 

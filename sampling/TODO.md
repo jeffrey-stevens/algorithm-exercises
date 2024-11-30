@@ -1,7 +1,6 @@
 # Todo
 
 * Implement tests for permute().
-* Separate tests for permute() from tests for permutation().
 * Add tests to test-utils.c
   * Test a large array (using a regular pattern)
 
