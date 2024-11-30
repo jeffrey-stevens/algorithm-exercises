@@ -11,6 +11,7 @@
 
 #include "permute.h"
 #include "utils.h"
+#include "error.h"
 
 // Is there a better way of doing this?
 #define TEST_PERM_MAX_BITS 24   /* 16 MB */
@@ -59,23 +60,23 @@ static bool is_permutation(int size, int * array) {
 // Tests
 
 Test(permutation, n_neg, .description = 
-        "Test that n < 0 returns error code PERM_ERR_NEG_SIZE.") {
+        "Test that n < 0 returns error code ERR_NEG_SIZE.") {
 
     int n = -1;
     int err_code = permutation(n, NULL);
 
-    cr_assert(eq(int, err_code, PERM_ERR_NEG_SIZE));
+    cr_assert(eq(int, err_code, ERR_NEG_SIZE));
 }
 
 
 Test(permutation, n_too_large, .description = 
-        "Test that n > RAND_MAX + 1 returns error code PERM_ERR_TOO_LARGE.") {
+        "Test that n > RAND_MAX + 1 returns error code ERR_TOO_LARGE.") {
 
 #if (RAND_MAX < INT_MAX - 1)
     int n = RAND_MAX + 2;
     int err_code = permutation(n, NULL);
 
-    cr_expect(eq(int, err_code, PERM_ERR_SIZE_TOO_LARGE));
+    cr_expect(eq(int, err_code, ERR_SIZE_TOO_LARGE));
 
 #else
     cr_log_warn("RAND_MAX is too close to INT_MAX on this machine "
@@ -85,11 +86,11 @@ Test(permutation, n_too_large, .description =
 
 
 Test(permutation, array_null, .description =
-        "Test that array = NULL returns PERM_ERR_NULL_ARRAY.") {
+        "Test that array = NULL returns ERR_NULL_ARRAY.") {
     int n = 1;
     int err_code = permutation(n, NULL);
 
-    cr_assert(eq(int, err_code, PERM_ERR_NULL_ARRAY));
+    cr_assert(eq(int, err_code, ERR_NULL_POINTER));
 }
 
 
@@ -126,7 +127,7 @@ ParameterizedTest(int * np, permutation, is_permutation, .description =
 
     int err_code = permutation(n, test_array);
 
-    cr_assert(eq(int, err_code, PERM_ERR_SUCCESS));
+    cr_assert(eq(int, err_code, ERR_SUCCESS));
 
     // Warn if the permutation is not a proper (i.e. nontrivial) permutation
     if (n > 1) {
@@ -159,7 +160,7 @@ Test(permutation, does_not_overwrite, .description =
 
     int err_code = permutation(n, test_array);
 
-    cr_assert(eq(int, err_code, PERM_ERR_SUCCESS));
+    cr_assert(eq(int, err_code, ERR_SUCCESS));
     
     bool any_changed = false;
     for (int i = n; i < size && !any_changed; ++i) {
@@ -185,8 +186,8 @@ Test(permutation, no_repetition, .description =
     int err_code1 = permutation(n, test_array1);
     int err_code2 = permutation(n, test_array2);
 
-    cr_assert(eq(int, err_code1, PERM_ERR_SUCCESS));
-    cr_assert(eq(int, err_code2, PERM_ERR_SUCCESS));
+    cr_assert(eq(int, err_code1, ERR_SUCCESS));
+    cr_assert(eq(int, err_code2, ERR_SUCCESS));
     
     bool all_equal = true;
     for(int i = 0; i < n && all_equal; ++i) {
@@ -216,8 +217,8 @@ Test(permutation, same_seed, .description =
     srand(seed);
     int err_code2 = permutation(n, test_array2);
 
-    cr_assert(eq(int, err_code1, PERM_ERR_SUCCESS));
-    cr_assert(eq(int, err_code2, PERM_ERR_SUCCESS));
+    cr_assert(eq(int, err_code1, ERR_SUCCESS));
+    cr_assert(eq(int, err_code2, ERR_SUCCESS));
     
     bool all_equal = true;
     for(int i = 0; i < n && all_equal; ++i) {

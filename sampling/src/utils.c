@@ -5,12 +5,7 @@
 #include <limits.h>
 
 #include "utils.h"
-
-
-void fatal_error(char * message) {
-    perror(message);
-    exit(EXIT_FAILURE);
-}
+#include "error.h"
 
 
 int * int_array(int size) {

@@ -10,6 +10,7 @@
 
 #include "sample.h"
 #include "utils.h"
+#include "error.h"
 
 
 Test(gen_sample_tree, basic_usage, .description = 
@@ -148,7 +149,7 @@ Test(gen_sample_tree, size_eq_range, .description =
 
 Test(gen_sample_tree, size_gt_range, .description =
     "Test that the sample_size > number range returns error code "
-    "ERR_SAMPLE_SIZE_TOO_LARGE") {
+    "ERR_SIZE_TOO_LARGE") {
 
     int min_int = 0;
     int max_int = 9;
@@ -158,9 +159,9 @@ Test(gen_sample_tree, size_gt_range, .description =
     int * samples = int_array(sample_size);
     int retval = gen_sample_tree(sample_size, min_int, max_int, samples);
 
-    cr_expect(eq(int, retval, ERR_SAMPLE_SIZE_TOO_LARGE),
+    cr_expect(eq(int, retval, ERR_SIZE_TOO_LARGE),
         "Error code: %d.  min_int = %d, max_int = %d, sample_size = %d.",
-        ERR_SAMPLE_SIZE_TOO_LARGE, min_int, max_int, sample_size);
+        ERR_SIZE_TOO_LARGE, min_int, max_int, sample_size);
 
     free(samples);
     }

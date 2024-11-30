@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "sample.h"
+#include "error.h"
 
 
 int validate_inputs(int sample_size, int min_int, int max_int,
@@ -10,10 +11,10 @@ int validate_inputs(int sample_size, int min_int, int max_int,
     int err_code = -1;
 
     if (sample == NULL) {
-        err_code = ERR_NULL_ARRAY_POINTER;
+        err_code = ERR_NULL_POINTER;
 
     } else if (sample_size < 0) {
-        err_code = ERR_NEG_SAMPLE_SIZE;
+        err_code = ERR_NEG_SIZE;
 
     } else if (min_int > max_int) {
         err_code = ERR_MIN_GT_MAX;
@@ -26,7 +27,7 @@ int validate_inputs(int sample_size, int min_int, int max_int,
     } else if (max_int - min_int + 1 < sample_size) {
         // The range is less than the sample size
         // Not possible to have distinct elements
-        err_code = ERR_SAMPLE_SIZE_TOO_LARGE;
+        err_code = ERR_SIZE_TOO_LARGE;
 
     } else {
         err_code = ERR_SUCCESS;

@@ -3,13 +3,14 @@
  * 
 */
 
-#include "sample.h"
-#include "utils.h"
-#include "testing.h"
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+
+#include "sample.h"
+#include "utils.h"
+#include "error.h"
+#include "testing.h"
 
 
 typedef struct NumNode Node;

@@ -3,23 +3,24 @@
 #include <limits.h>
 
 #include "permute.h"
+#include "error.h"
 
 
 static int validate_inputs(int n, int * array) {
 
-    int err_code = PERM_ERR_SUCCESS;
+    int err_code = ERR_SUCCESS;
 
     if (n < 0) {
-        err_code = PERM_ERR_NEG_SIZE;
+        err_code = ERR_NEG_SIZE;
 
     } else if (n > PERMUTATION_MAX_SIZE) {
-        err_code = PERM_ERR_SIZE_TOO_LARGE;
+        err_code = ERR_SIZE_TOO_LARGE;
 
     } else if (array == NULL) {
-        err_code = PERM_ERR_NULL_ARRAY;
+        err_code = ERR_NULL_POINTER;
 
     } else {
-        err_code = PERM_ERR_SUCCESS;
+        err_code = ERR_SUCCESS;
     }
 
     return err_code;
@@ -48,7 +49,7 @@ static void permute_(int n, int * array) {
 int permute(int n, int * array) {
 
     int err_code = validate_inputs(n, array);
-    if (err_code != PERM_ERR_SUCCESS) {
+    if (err_code != ERR_SUCCESS) {
         return err_code;
     }
 
@@ -57,7 +58,7 @@ int permute(int n, int * array) {
     // Once all positions have been swapped at least once, this guarantees
     // that each integer has an equal chance of being at any given position.
 
-    return PERM_ERR_SUCCESS;
+    return ERR_SUCCESS;
 }
 
 
@@ -67,7 +68,7 @@ int permute(int n, int * array) {
 int permutation(int n, int * array) {
 
     int err_code = validate_inputs(n, array);
-    if (err_code != PERM_ERR_SUCCESS) {
+    if (err_code != ERR_SUCCESS) {
         return err_code;
     }
 
@@ -78,5 +79,5 @@ int permutation(int n, int * array) {
 
     permute_(n, array);
 
-    return PERM_ERR_SUCCESS;
+    return ERR_SUCCESS;
 }
