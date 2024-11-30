@@ -13,7 +13,7 @@
 #include "utils.h"
 
 // Is there a better way of doing this?
-#define TEST_PERM_MAX_BITS 20   /* 1 MB */
+#define TEST_PERM_MAX_BITS 24   /* 16 MB */
 #define TEST_PERM_MAX_SIZE \
         (PERMUTATION_MAX_SIZE >> TEST_PERM_MAX_BITS > 0) \
         ? 1 << TEST_PERM_MAX_BITS : PERMUTATION_MAX_SIZE
@@ -126,9 +126,11 @@ ParameterizedTest(int * np, permutation, is_permutation, .description =
     // Warn if the permutation is not a proper (i.e. nontrivial) permutation
     if (n > 1) {
         if (is_trivial(n, test_array)) {
-            cr_log_warn("Generated the trivial permutation.");
+            cr_log_warn("permutation::is_permutation(%d):  "
+                "Generated the trivial permutation.", n);
         } else {
-            cr_log_info("Generated a nontrivial permutation.");
+            cr_log_info("permutation::is_permutation(%d):  "
+                "Generated a nontrivial permutation.", n);
         }
     }
     
@@ -136,50 +138,6 @@ ParameterizedTest(int * np, permutation, is_permutation, .description =
 
     free(test_array);
 }
-
-
-// Test(permutation, n_eq_zero, .description =
-//         "Test that n = 0 returns PERM_ERR_SUCCESS and doesn't change the array.") {
-
-//     int n = 0;
-//     int ref_array[] = {6, 2, 7, 9, 4, 8, 0, 3, 1, 5};
-//     int size = sizeof(ref_array) / sizeof(int);
-
-//     int * test_array = int_array(size);
-//     for (int i = 0; i < size; ++i) {
-//         test_array[i] = ref_array[i];
-//     }
-
-//     int err_code = permutation(n, test_array);
-
-//     cr_assert(eq(int, err_code, PERM_ERR_SUCCESS));
-//     cr_expect(eq(int[size], test_array, ref_array));
-
-//     free(test_array);
-// }
-
-
-// Test(permutation, is_permutation, .description =
-//         "Verifies that permutation() contains all integers 0, ..., n - 1.") {
-
-//     int n = 100;
-
-//     int * test_array = int_array(n);
-//     int err_code = permutation(n, test_array);
-
-//     cr_assert(eq(int, err_code, PERM_ERR_SUCCESS));
-
-//     // Warn if the permutation is not a proper (i.e. nontrivial) permutation
-//     if (is_trivial(n, test_array)) {
-//         cr_log_warn("Generated the trivial permutation.");
-//     } else {
-//         cr_log_info("Generated a nontrivial permutation.");
-//     }
-    
-//     cr_expect(is_permutation(n, test_array));
-
-//     free(test_array);
-// }
 
 
 Test(permutation, does_not_overwrite, .description =
@@ -206,4 +164,32 @@ Test(permutation, does_not_overwrite, .description =
     cr_expect(not(any_changed));
 
     free(test_array);
+}
+
+
+Test(permutation, no_repetition, .description =
+        "Verifies that the permutation doesn't repeat itself.") {
+
+    // The number of permutations is n!, so it extremely unlikely that
+    // two permutations match by coincidence for even modest n...
+    int n = 100;
+
+    int * test_array1 = int_array(n);
+    int * test_array2 = int_array(n);
+
+    int err_code1 = permutation(n, test_array1);
+    int err_code2 = permutation(n, test_array2);
+
+    cr_assert(eq(int, err_code1, PERM_ERR_SUCCESS));
+    cr_assert(eq(int, err_code2, PERM_ERR_SUCCESS));
+    
+    bool all_equal = true;
+    for(int i = 0; i < n && all_equal; ++i) {
+        all_equal = test_array1[i] == test_array2[i];
+    }
+
+    cr_expect(not(all_equal));
+
+    free(test_array1);
+    free(test_array2);
 }
