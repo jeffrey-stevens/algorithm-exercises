@@ -1,6 +1,7 @@
 # Todo
 
-* Implement range tests for permutation().
+* Implement tests for permute().
+* Separate tests for permute() from tests for permutation().
 
 ## Components
 
@@ -33,15 +34,16 @@
 
 ## Tests
 
-* Set up mechanism for testing internal functions
+* Set up mechanism for testing internal (static) functions
 * Check the randomness of the samplings
-* permutation()
-  * Test if setting seed generates same permutation
-  * Fail if large n produces the trivial permutation?
+* permute()
+  * Test the input conditions
+  * Test that permute() does indeed permute an array
+  * Verify that permute() does work with duplicates (unlike permutation())
 
 
 ## Other functions
 
 * Hash table implementation of gen_samples()
-* Generate random permutations
+* Permute an array
 * Sample from a population

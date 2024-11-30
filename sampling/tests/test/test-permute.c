@@ -70,7 +70,7 @@ Test(permutation, n_too_large, .description =
     int n = RAND_MAX + 2;
     int err_code = permutation(n, NULL);
 
-    cr_expect(eq(int, err_code, PERM_ERR_TOO_LARGE));
+    cr_expect(eq(int, err_code, PERM_ERR_SIZE_TOO_LARGE));
 
 #else
     cr_log_warn("RAND_MAX is too close to INT_MAX on this machine "

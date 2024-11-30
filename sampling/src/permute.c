@@ -1,32 +1,39 @@
 #include <stdlib.h>
+#include <stdbool.h>
 #include <limits.h>
 
 #include "permute.h"
 
-#define PERMUTATION_MAX_SIZE \
-    (RAND_MAX == INT_MAX ? INT_MAX : RAND_MAX + 1)
 
+static int validate_inputs(int n, int * array) {
 
-// Generates a permutation of 0, .., n - 1.
-// Assumes that rand seed has been set...
-//
-int permutation(int n, int * array) {
+    int err_code = PERM_ERR_SUCCESS;
 
     if (n < 0) {
-        return PERM_ERR_NEG_SIZE;
+        err_code = PERM_ERR_NEG_SIZE;
+
+    } else if (n > PERMUTATION_MAX_SIZE) {
+        err_code = PERM_ERR_SIZE_TOO_LARGE;
+
+    } else if (array == NULL) {
+        err_code = PERM_ERR_NULL_ARRAY;
+
+    } else {
+        err_code = PERM_ERR_SUCCESS;
     }
 
-    if (n > PERMUTATION_MAX_SIZE) {
-        return PERM_SIZE_TOO_LARGE;
-    }
+    return err_code;
+}
 
-    if (array == NULL) {
-        return PERM_ERR_NULL_ARRAY;
-    }
 
-    // Initialize the array
-    for (int i = 0; i < n; ++i) {
-        array[i] = i;
+// Permutes an array of n elements
+// Assumes that rand seed has been set...
+//
+int permute(int n, int * array) {
+
+    int err_code = validate_inputs(n, array);
+    if (err_code != PERM_ERR_SUCCESS) {
+        return err_code;
     }
 
     // Iterate through each position, performing one random transposition
@@ -45,4 +52,25 @@ int permutation(int n, int * array) {
     // that each integer has an equal chance of being at any given position.
 
     return PERM_ERR_SUCCESS;
+}
+
+
+// Generates a permutation of 0, .., n - 1.
+// Assumes that rand seed has been set...
+//
+int permutation(int n, int * array) {
+
+    int err_code = validate_inputs(n, array);
+    if (err_code != PERM_ERR_SUCCESS) {
+        return err_code;
+    }
+
+    // Initialize the array
+    for (int i = 0; i < n; ++i) {
+        array[i] = i;
+    }
+
+    err_code = permute(n, array);
+
+    return err_code;
 }
