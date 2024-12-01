@@ -58,7 +58,8 @@ TESTS_OBJ_FILES = \
 	$(TESTS_BUILD_DIR)/test-criterion.o \
 	$(TESTS_BUILD_DIR)/test-utils.o \
 	$(TESTS_BUILD_DIR)/test-sample.o \
-	$(TESTS_BUILD_DIR)/test-permute.o
+	$(TESTS_BUILD_DIR)/test-permute.o \
+	$(TESTS_BUILD_DIR)/test-validate.o
 
 
 # Targets
@@ -117,6 +118,18 @@ $(TESTS_BUILD_DIR)/test-permute.o: $(TESTS_SRC_DIR)/test-permute.c \
 		$(INCLUDE_DIR)/permute.h $(INCLUDE_DIR)/internal/permute.h \
 		$(INCLUDE_DIR)/utils.h
 	$(CC) $(CFLAGS) $(TESTING_FLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
+
+$(TESTS_BUILD_DIR)/test-validate.o: $(TESTS_SRC_DIR)/test-validate.c \
+		$(INCLUDE_DIR)/validate.h $(INCLUDE_DIR)/utils.h $(INCLUDE_DIR)/error.h
+	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTING_FLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
+
+# This is only for debugging...
+$(TESTS_BIN_DIR)/test-validate: \
+		$(TESTS_BUILD_DIR)/test-validate.o \
+		$(BUILD_DIR)/utils.o \
+		$(BUILD_DIR)/error.o
+	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -o $@ $^
+	 chmod 777 $@
 
 $(TESTS_TARGET): $(OBJ_FILES) $(TESTS_OBJ_FILES) 
 	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -o $@ $^
