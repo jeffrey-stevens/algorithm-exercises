@@ -6,7 +6,8 @@
 #define ERR_NEG_SIZE            2
 #define ERR_SIZE_TOO_LARGE      3
 #define ERR_MIN_GT_MAX          4
-#define ERR_RANGE_TOO_LARGE     5
+#define ERR_OUT_OF_RANGE        5
+#define ERR_RANGE_TOO_LARGE     6
 
 
 void fatal_error(char * message);

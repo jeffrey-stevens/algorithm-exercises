@@ -2,6 +2,9 @@
 
 * Implement tests for permute().
 * Input validation for is_permuted(), etc.
+* Test validate.h
+* Test random_ints(), etc.
+* Refactor validation code to use validate.h
 
 
 ## Components
@@ -41,7 +44,6 @@
 
 ## Tests
 
-* Set up mechanism for testing internal (static) functions
 * Check the randomness of the samplings
 * permute.c
   * Write tests for permute_()
