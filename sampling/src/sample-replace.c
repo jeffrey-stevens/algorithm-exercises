@@ -1,7 +1,7 @@
 #include <stdlib.h>
+#include <stdbool.h>
 #include <limits.h>
 
-#include "sample.h"
 #include "utils.h"
 #include "validate.h"
 #include "error.h"
@@ -38,12 +38,17 @@ int sample_replace(int sample_size, int * dest_array, int src_size, int * src_ar
 int random_ints(int n, int max_int, int * array) {
 
     VALIDATE_NONNEG(n)
+    VALIDATE_NONNEG(max_int)
     VALIDATE_NOT_NULL(array)
     VALIDATE_IN_RAND_RANGE(0, max_int)
 
     for(int i = 0; i < n; ++i) {
         // Write it this way to avoid overflow
-        array[i] = ((rand() - 1) % max_int) + 1;
+        if (max_int == 0) {
+            array[i] = 0;
+        } else {
+            array[i] = ((rand() - 1) % max_int) + 1;
+        }
     }
 
     return ERR_SUCCESS;

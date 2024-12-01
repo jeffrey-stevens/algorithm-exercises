@@ -3,7 +3,7 @@
 * Implement tests for permute().
 * Input validation for is_permuted(), etc.
 * Test validate.h
-* Test random_ints(), etc.
+* Finish tests for random_ints(), etc.
 * Refactor validation code to use validate.h
 
 

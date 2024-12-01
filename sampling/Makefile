@@ -49,6 +49,7 @@ OBJ_FILES = \
 	$(BUILD_DIR)/sample.o \
 	$(BUILD_DIR)/sample-tree.o \
 	$(BUILD_DIR)/sample-hash.o \
+	$(BUILD_DIR)/sample-replace.o \
 	$(BUILD_DIR)/permute.o \
 	$(BUILD_DIR)/utils.o \
 	$(BUILD_DIR)/error.o
@@ -58,6 +59,7 @@ TESTS_OBJ_FILES = \
 	$(TESTS_BUILD_DIR)/test-criterion.o \
 	$(TESTS_BUILD_DIR)/test-utils.o \
 	$(TESTS_BUILD_DIR)/test-sample.o \
+	$(TESTS_BUILD_DIR)/test-sample-replace.o \
 	$(TESTS_BUILD_DIR)/test-permute.o \
 	$(TESTS_BUILD_DIR)/test-validate.o
 
@@ -93,6 +95,10 @@ $(BUILD_DIR)/sample-hash.o: $(SRC_DIR)/sample-hash.c \
 		$(INCLUDE_DIR)/sample.h $(INCLUDE_DIR)/utils.h $(INCLUDE_DIR)/testing.h 
 	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
 
+$(BUILD_DIR)/sample-replace.o: $(SRC_DIR)/sample-replace.c \
+		$(INCLUDE_DIR)/utils.h $(INCLUDE_DIR)/validate.h $(INCLUDE_DIR)/error.h 
+	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
+
 $(BUILD_DIR)/permute.o: $(SRC_DIR)/permute.c \
 		$(INCLUDE_DIR)/permute.h
 	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
@@ -111,6 +117,10 @@ $(TESTS_BUILD_DIR)/test-utils.o: $(TESTS_SRC_DIR)/test-utils.c $(INCLUDE_DIR)/ut
 	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTING_FLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
 
 $(TESTS_BUILD_DIR)/test-sample.o: $(TESTS_SRC_DIR)/test-sample.c \
+		$(INCLUDE_DIR)/sample.h $(INCLUDE_DIR)/utils.h $(INCLUDE_DIR)/error.h
+	$(CC) $(CFLAGS) $(TESTING_FLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
+
+$(TESTS_BUILD_DIR)/test-sample-replace.o: $(TESTS_SRC_DIR)/test-sample-replace.c \
 		$(INCLUDE_DIR)/sample.h $(INCLUDE_DIR)/utils.h
 	$(CC) $(CFLAGS) $(TESTING_FLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -c -o $@ $<
 
@@ -126,6 +136,14 @@ $(TESTS_BUILD_DIR)/test-validate.o: $(TESTS_SRC_DIR)/test-validate.c \
 # This is only for debugging...
 $(TESTS_BIN_DIR)/test-validate: \
 		$(TESTS_BUILD_DIR)/test-validate.o \
+		$(BUILD_DIR)/utils.o \
+		$(BUILD_DIR)/error.o
+	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -o $@ $^
+	 chmod 777 $@
+
+$(TESTS_BIN_DIR)/test-sample-replace: \
+		$(TESTS_BUILD_DIR)/test-sample-replace.o \
+		$(BUILD_DIR)/sample-replace.o \
 		$(BUILD_DIR)/utils.o \
 		$(BUILD_DIR)/error.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $(TESTS_LDFLAGS) -o $@ $^
