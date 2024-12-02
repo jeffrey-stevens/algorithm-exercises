@@ -4,6 +4,9 @@
 * Input validation for is_permuted(), etc.
 * Test validate.h
 * Finish tests for random_ints(), etc.
+  * That random_ints doesn't overwrite the array
+  * That random_ints doesn't produce just the same number
+  * That random_ints always gives the same result when the random seed is set
 * Refactor validation code to use validate.h
 
 
@@ -40,6 +43,8 @@
 * Make project into a command
   * Sample size, sample range, random seed, outfile as arguments
   * Output one integer per line
+* Add cppcheck to Makefile
+* Start adding Doxygen comments
 
 
 ## Tests
@@ -51,7 +56,7 @@
   * Test that permute() does indeed permute an array
 * utils.c
   * Write tests for array functions
-* Write tests for sample_replace().
+* Write tests for sample_replace.c.
 
 ## Other functions
 
