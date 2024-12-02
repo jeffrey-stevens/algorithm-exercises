@@ -45,7 +45,7 @@ Test(random_ints, max_out_of_range, .description =
 }
 
 
-Test(random_ints, in_range, .description = 
+Test(random_ints, args_in_range, .description = 
         "Test for success when n and max-int are in-range.") {
 
     int * test_array;
@@ -62,4 +62,46 @@ Test(random_ints, in_range, .description =
     test_array = int_array(1);
     cr_assert(eq(int, random_ints(1, 0, test_array), ERR_SUCCESS));
     free(test_array);
+}
+
+
+ParameterizedTestParameters(random_ints, vals_in_range) {
+
+    int fixed_maxes[] = {0, RAND_MAX};
+    int fixed_size = sizeof(fixed_maxes) / sizeof(int);
+
+    int max_power = (int) log10((double) RAND_MAX);
+    int var_size = max_power + 1;
+    int total_size = fixed_size + var_size;
+    int * max_ints = int_array(total_size);
+
+    for (int i = 0; i < fixed_size; ++i) {
+        max_ints[i] = fixed_maxes[i];
+    }
+
+    int curr_max = 1;
+    for (int i = fixed_size; i < total_size; ++i) {
+        max_ints[i] = curr_max;
+        curr_max *= 10;
+    }
+
+    return cr_make_param_array(int, max_ints, total_size);
+}
+
+
+ParameterizedTest(int * param, random_ints, vals_in_range, .description =
+        "Tests that all values are within range for various values of max_int.") {
+
+    int max_int = *param;
+    int n = 10000;
+    int * test_array = int_array(n);
+
+    random_ints(n, max_int, test_array);
+
+    bool all_in_range = true;
+    for(int i = 0; i < n; ++i) {
+        all_in_range = test_array[i] >= 0 && test_array[i] <= max_int;
+    }
+
+    cr_assert(all_in_range);
 }
