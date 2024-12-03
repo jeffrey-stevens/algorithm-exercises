@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include "sample.h"
+#include "sample-hash.h"
 #include "utils.h"
 #include "error.h"
 #include "testing.h"

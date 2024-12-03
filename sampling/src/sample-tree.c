@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include "sample.h"
+#include "sample-tree.h"
 #include "utils.h"
 #include "error.h"
 #include "testing.h"

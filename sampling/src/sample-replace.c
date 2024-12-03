@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <limits.h>
 
+#include "sample-replace.h"
 #include "utils.h"
 #include "validate.h"
 #include "error.h"

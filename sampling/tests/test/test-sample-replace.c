@@ -7,7 +7,7 @@
 #include <criterion/parameterized.h>
 #include <criterion/new/assert.h>
 
-#include "sample.h"
+#include "sample-replace.h"
 #include "utils.h"
 #include "error.h"
 
